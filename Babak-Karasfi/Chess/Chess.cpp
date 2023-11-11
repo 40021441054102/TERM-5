@@ -74,12 +74,28 @@
                             y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
                         ) {
                             std::cout << TAB SUCCESS "Piece (" << board.piecesImages.at(i).name << ", " << board.piecesImages.at(i).color << ") Selected" << ENDL;
+                            cv::Mat tmp;
+                            board.window.copyTo(tmp);
+                            cv::rectangle(
+                                tmp,
+                                cv::Point(
+                                    board.piecesImages.at(i).x,
+                                    board.piecesImages.at(i).y
+                                ),
+                                cv::Point(
+                                    board.piecesImages.at(i).x + board.piecesImages.at(i).size,
+                                    board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                ),
+                                cv::Scalar(0, 255, 0),
+                                2,
+                                cv::LINE_AA,
+                                0
+                            );
+                            cv::imshow("Chess Board", tmp);
+                            break;
                         }
                     }
                 }
-                // if (section == SEC_PIECES) {
-                //     std::cout << TAB LOG "Selected" ENDL;
-                // }
                 break;
             };
             //-- Left Button Up
