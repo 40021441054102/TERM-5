@@ -11,10 +11,23 @@
         color = _color;
         id = _id;
     }
+    //-- Method to Set Color of Piece
+    void Piece::setColor(std::int8_t &_in) {
+        color = _in;
+    }
+    //-- Method to Set ID of Piece
+    void Piece::setID(std::int8_t &_in) {
+        id = _in;
+    }
+    //-- Method to Set On Board Status of Piece
+    void Piece::setOnBoard(bool &_in) {
+        onboard_status = _in;
+    }
     //-- Chess Class Constructor
     Chess::Chess(
         int &_size
     ) {
+        total = 32;
         home.resize(0);
         board.size = _size;
         board.window = cv::Mat(
@@ -49,16 +62,31 @@
         switch (event) {
             //-- Left Button Down
             case cv::EVENT_LBUTTONDOWN: {
-                if (section == SEC_PIECES) {
-                    std::cout << TAB LOG "Selected" ENDL;
+                for (int i = 0; i < board.piecesImages.size(); i++) {
+                    if (
+                        x >= board.piecesImages.at(i).x
+                        &&
+                        x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
+                    ) {
+                        if (
+                            y >= board.piecesImages.at(i).y
+                            &&
+                            y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                        ) {
+                            std::cout << TAB SUCCESS "Piece (" << board.piecesImages.at(i).name << ", " << board.piecesImages.at(i).color << ") Selected" << ENDL;
+                        }
+                    }
                 }
+                // if (section == SEC_PIECES) {
+                //     std::cout << TAB LOG "Selected" ENDL;
+                // }
                 break;
             };
             //-- Left Button Up
             case cv::EVENT_LBUTTONUP: {
-                if (section == SEC_PIECES) {
-                    std::cout << TAB LOG "Free" ENDL;
-                }
+                // if (section == SEC_PIECES) {
+                //     std::cout << TAB LOG "Free" ENDL;
+                // }
                 break;
             };
             case cv::EVENT_MOUSEMOVE: {
@@ -294,28 +322,76 @@
                     board.piecesImages.push_back(tmpPiece);
                     if (address[0] == 'b' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black Bishop Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_BISHOP;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Bishop";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'k' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black King Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_KING;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "King";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'n' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black Knight Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_KNIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Knight";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'p' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black Pawn Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_PAWN;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Pawn";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'q' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black Queen Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_QUEEN;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Queen";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'r' && address[1] == 'd') {
                         std::cout << TAB TAB SUCCESS "Black Castle Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_CASTLE;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_DARK;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Castle";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Dark";
                     } else if (address[0] == 'b' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White Bishop Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_BISHOP;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Bishop";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     } else if (address[0] == 'k' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White King Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_KING;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "King";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     } else if (address[0] == 'n' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White Knight Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_KNIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Knight";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     } else if (address[0] == 'p' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White Pawn Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_PAWN;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Pawn";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     } else if (address[0] == 'q' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White Queen Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_QUEEN;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Queen";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     } else if (address[0] == 'r' && address[1] == 'l') {
                         std::cout << TAB TAB SUCCESS "White Castle Detected" ENDL;
+                        board.piecesImages.at(board.piecesImages.size() - 1).nameID = CHESS_CASTLE;
+                        board.piecesImages.at(board.piecesImages.size() - 1).colorID = CHESS_LIGHT;
+                        board.piecesImages.at(board.piecesImages.size() - 1).name = "Castle";
+                        board.piecesImages.at(board.piecesImages.size() - 1).color = "Light";
                     }
                     std::cout << TAB TAB SUCCESS "Imported" ENDL;
                 } else {

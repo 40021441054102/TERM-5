@@ -32,8 +32,8 @@
     };
     //-- Chess Pieces Colors
     enum ChessPieceColors : std::int8_t {
-        AIBKC_BLACK = std::int8_t(0),
-        AIBKC_WHITE = std::int8_t(1)
+        CHESS_DARK = std::int8_t(0),
+        CHESS_LIGHT = std::int8_t(1)
     };
     //-- Chess Pieces Name
     enum ChessPieceNames {
@@ -76,17 +76,20 @@
                 bool &
             );
             Piece() {
-                color = std::int8_t(AIBKC_BLACK);
+                color = std::int8_t(CHESS_DARK);
                 id = std::int8_t(CHESS_PAWN);
             }
-            
+            void setColor(std::int8_t &);
+            void setID(std::int8_t &);   
+            void setOnBoard(bool &);         
     };
     //-- Chess Class Definition
     class Chess {
         private:
+            int total;
             //-- Game Section or Pieces Section Flag
             int section;
-            // std::vector<Piece> pieces;
+            std::vector<Piece> pieces;
             struct Board {
                 cv::Mat window;
                 int size;
@@ -94,6 +97,9 @@
                     int x, y;
                     int size;
                     cv::Mat image;
+                    std::int8_t colorID;
+                    int nameID;
+                    std::string name, color;
                 };
                 std::vector<PieceImage> piecesImages;
             };
