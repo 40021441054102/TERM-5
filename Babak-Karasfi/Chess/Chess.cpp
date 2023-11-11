@@ -161,77 +161,148 @@
                     tmp.copyTo(tempMat1);
                     break;
                 }
-                if (selected.flag == SELECT_MOVE) {
-                    cv::Mat tmp, pieceImage;
-                    tempMat1.copyTo(tmp);
-                    // board.piecesImages.at(selected.id).
-                }
             };
             //-- Mouse Hover
             case cv::EVENT_MOUSEMOVE: {
-                if (x > board.size) {
-                    if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) {
-                        for (int i = 0; i < board.piecesImages.size(); i++) {
+                if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) {
+                    for (int i = 0; i < board.piecesImages.size(); i++) {
+                        if (
+                            x >= board.piecesImages.at(i).x
+                            &&
+                            x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
+                        ) {
                             if (
-                                x >= board.piecesImages.at(i).x
+                                y >= board.piecesImages.at(i).y
                                 &&
-                                x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
+                                y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
                             ) {
-                                if (
-                                    y >= board.piecesImages.at(i).y
-                                    &&
-                                    y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                ) {
-                                    cv::Mat tmp;
-                                    board.window.copyTo(tmp);
-                                    cv::rectangle(
-                                        tmp,
-                                        cv::Point(
-                                            board.piecesImages.at(i).x,
-                                            board.piecesImages.at(i).y
-                                        ),
-                                        cv::Point(
-                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size,
-                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                        ),
-                                        cv::Scalar(100, 100, 0),
-                                        4,
-                                        cv::LINE_AA,
-                                        0
-                                    );
-                                    cv::rectangle(
-                                        tmp,
-                                        cv::Point(
-                                            board.piecesImages.at(i).x,
-                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                        ),
-                                        cv::Point(
-                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size,
-                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
-                                        ),
-                                        cv::Scalar(100, 100, 0),
-                                        -1,
-                                        cv::LINE_AA,
-                                        0
-                                    );
-                                    cv::putText(
-                                        tmp,
-                                        board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
-                                        cv::Point(
-                                            board.piecesImages.at(i).x + 10,
-                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
-                                        ),
-                                        cv::FONT_HERSHEY_SIMPLEX,
-                                        0.7,
-                                        cv::Scalar(255, 255, 0),
-                                        2
-                                    );
-                                    cv::imshow("Chess Board", tmp);
-                                    break;
-                                }
+                                cv::Mat tmp;
+                                board.window.copyTo(tmp);
+                                cv::rectangle(
+                                    tmp,
+                                    cv::Point(
+                                        board.piecesImages.at(i).x,
+                                        board.piecesImages.at(i).y
+                                    ),
+                                    cv::Point(
+                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size,
+                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                    ),
+                                    cv::Scalar(100, 100, 0),
+                                    4,
+                                    cv::LINE_AA,
+                                    0
+                                );
+                                cv::rectangle(
+                                    tmp,
+                                    cv::Point(
+                                        board.piecesImages.at(i).x - 2,
+                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                    ),
+                                    cv::Point(
+                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size + 2,
+                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
+                                    ),
+                                    cv::Scalar(100, 100, 0),
+                                    -1,
+                                    cv::LINE_AA,
+                                    0
+                                );
+                                cv::putText(
+                                    tmp,
+                                    board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
+                                    cv::Point(
+                                        board.piecesImages.at(i).x + 10,
+                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
+                                    ),
+                                    cv::FONT_HERSHEY_SIMPLEX,
+                                    0.7,
+                                    cv::Scalar(255, 255, 0),
+                                    2
+                                );
+                                cv::imshow("Chess Board", tmp);
+                                break;
                             }
                         }
                     }
+                } else if (selected.flag = SELECT_MOVE) {
+                    // std::cout << "Moving" << std::endl;
+                    cv::Mat tmp;
+                    tempMat1.copyTo(tmp);
+                    board.piecesImages.at(selected.id).image.copyTo(pieceImage);
+                    cv::circle(tmp, cv::Point(x, y), 3, cv::Scalar(0, 0, 255), -1, 8, 0);
+                    std::cout << "debug" << std::endl;
+                    cv::rectangle(
+                        tmp,
+                        cv::Point(
+                            x + 60,
+                            y + 60
+                        ),
+                        cv::Point(
+                            x - 60,
+                            y - 60
+                        ),
+                        cv::Scalar(100, 100, 0),
+                        4,
+                        cv::LINE_AA,
+                        0
+                    );
+                    cv::rectangle(
+                        tmp,
+                        cv::Point(
+                            x + 62,
+                            y + 60
+                        ),
+                        cv::Point(
+                            x - 62,
+                            y + 100
+                        ),
+                        cv::Scalar(100, 100, 0),
+                        -1,
+                        cv::LINE_AA,
+                        0
+                    );
+                    cv::putText(
+                        tmp,
+                        board.piecesImages.at(selected.id).color + " " + board.piecesImages.at(selected.id).name,
+                        cv::Point(
+                            x - 55,
+                            y + 85
+                        ),
+                        cv::FONT_HERSHEY_SIMPLEX,
+                        0.6,
+                        cv::Scalar(255, 255, 0),
+                        2
+                    );
+                    int resizeWidth = pieceImage.cols * PIECE_PICK_SIZE;
+                    int resizeHeight = pieceImage.cols * PIECE_PICK_SIZE;
+                    cv::resize(pieceImage, pieceImage, cv::Size(
+                        resizeWidth,
+                        resizeHeight
+                    ), cv::INTER_LINEAR);
+                    int r, g, b;
+                    cv::Vec3b pixel;
+                    for (int i = 0; i < pieceImage.cols; i++) {
+                        for (int j = 0; j < pieceImage.rows; j++) {
+                            pixel = pieceImage.at<cv::Vec3b>(i, j);
+                            r = static_cast<int>(pixel[0]);
+                            g = static_cast<int>(pixel[1]);
+                            b = static_cast<int>(pixel[2]);
+                            if (r != 100 && g != 100 && b != 100) {
+                                // std::cout << r << " " << g << " " << b << std::endl;
+                                // std::cout << "here ?" << std::endl;
+                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[0] = int(b);
+                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[1] = int(g);
+                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[2] = int(r);
+                                // cv::circle(tmp, cv::Point(x, y), 1, cv::Scalar(255, 255, 0), -1, cv::LINE_4, 0);
+                                // cv::circle(tmp, cv::Point(x, y), 10, cv::Scalar(255, 0, 255), -1, 8, 0);
+                            }
+                        }
+                    }
+                    // cv::imshow("Selected", pieceImage);
+                    cv::imshow("Chess Board", tmp);
+                }
+                if (x > board.size) {
                     if (section == SEC_GAME) {
                         std::cout << LOG "Choose Piece" ENDL;
                     }

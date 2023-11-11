@@ -25,6 +25,7 @@
     # define TAB "   "
     # define ENDL "\n"
     # define SPEED 2
+    # define PIECE_PICK_SIZE 0.85
     //-- Piece Selecting States
     enum SelectingStates {
         SELECT_NONE,
@@ -93,7 +94,7 @@
     //-- Chess Class Definition
     class Chess {
         private:
-            cv::Mat tempMat1;
+            cv::Mat tempMat1, pieceImage;
             int total;
             struct Selected {
                 int flag;
