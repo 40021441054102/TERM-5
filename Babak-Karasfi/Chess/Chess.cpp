@@ -35,6 +35,47 @@
         XCloseDisplay(disp);
         // board.pieces.resize(0);
         board.piecesImages.resize(0);
+        //-- Set Mouse Callback
+        cv::setMouseCallback("Chess Board", onMouseCallback, this);
+        //-- Initialize Mouse Section to Default in Pieces Section
+        section = SEC_PIECES;
+    }
+    //-- OnMouseCallback Method
+    void Chess::onMouseCallback(int event, int x, int y, int flags, void* userdata) {
+        static_cast<Chess*>(userdata)->onMouse(event, x, y, flags);
+    }
+    //-- Mouse Callbacks Handling
+    void Chess::onMouse(int event, int x, int y, int flags) {
+        switch (event) {
+            //-- Left Button Down
+            case cv::EVENT_LBUTTONDOWN: {
+                if (section == SEC_PIECES) {
+                    std::cout << TAB LOG "Selected" ENDL;
+                }
+                break;
+            };
+            //-- Left Button Up
+            case cv::EVENT_LBUTTONUP: {
+                if (section == SEC_PIECES) {
+                    std::cout << TAB LOG "Free" ENDL;
+                }
+                break;
+            };
+            case cv::EVENT_MOUSEMOVE: {
+                if (x > board.size) {
+                    if (section == SEC_GAME) {
+                        std::cout << LOG "Choose Piece" ENDL;
+                    }
+                    section = SEC_PIECES;
+                } else {
+                    if (section == SEC_PIECES) {
+                        std::cout << LOG "Select and Move Piece" ENDL;
+                    }
+                    section = SEC_GAME;
+                }
+                break;
+            }
+        };
     }
     //-- Generate Chess Board
     void Chess::generateChessBoard() {
@@ -366,7 +407,6 @@
                 cv::waitKey(50);
                 cv::imshow("Chess Board", board.window);
             }
-            cv::waitKey(0);
             //-- Add Pieces to Board
             int r, g, b;
             cv::Vec3b pixel;
@@ -390,69 +430,9 @@
                         board.window.at<cv::Vec3b>(y, x)[2] = r;
                     }
                 }
-                cv::waitKey(10);
+                cv::waitKey(50);
                 cv::imshow("Chess Board", board.window);
             }
-                    //     cv::circle(
-                    //         test,
-                    //         cv::Point(x, y),
-                    //         1,
-                    //         cv::Scalar(0, 0, 255),
-                    //         0,
-                    //         cv::LINE_4,
-                    //         0
-                    //     );
-                        // cv::circle(
-                        //     board.window,
-                        //     cv::Point(x, y),
-                        //     2,
-                        //     cv::Scalar(100, 100, 100),
-                        //     -0,
-                        //     cv::LINE_4,
-                        //     0
-                        // );
-            // cv::Mat abc;
-            // abc = cv::imread("Assets/bd.png", cv::IMREAD_COLOR);
-            // cv::cvtColor(abc, abc, cv::COLOR_BGRA2BGR);
-            // cv::resize(abc, abc, cv::Size(home.at(0).size, home.at(0).size), cv::INTER_LINEAR);
-            // cv::Mat test(abc.cols, abc.rows, CV_8UC3, cv::Scalar(0,0,0));
-            // cv::waitKey(0);
-            // long int iii = 0;
-            // for (int x = 0; x < abc.cols; x++) {
-            //     for (int y = 0; y < abc.rows; y++) {
-            //     }
-            // }
-            // cv::Vec4b pixel;
-            // for (int i = 0; i < board.piecesImages.size(); i++) {
-            //     for (
-            //         int x = 0; x < board.piecesImages.at(i).size; x++
-            //     ) {
-            //         for (
-            //             int x = 0; x < board.piecesImages.at(i).size; x++
-            //         ) {
-            //             pixel = board.window.at<cv::Vec4b>(x, y);
-            //             std::cout << "debug" << std::endl;
-            //             if (pixel[3] > 0) {  // Check if the pixel is not transparent
-            //                 std::cout << pixel[0] << TAB << pixel[1] << TAB << pixel[2] << std::endl;
-            //             } else {
-            //                 std::cout << "Transparent Pixel" << std::endl;
-            //             }
-            //             cv::waitKey(100);
-            //         }
-            //     }
-
-            // cv::Vec4b pixel;
-            // for (int i = 0; i < board.piecesImages.size(); i++) {
-            //     for (int x = 0; x < board.piecesImages.at(i).size; x++) {
-            //         for (int y = 0; y < board.piecesImages.at(i).size; y++) {
-            //             pixel = board.window.at<cv::Vec4b>(x, y);
-            //             cv::waitKey(100);
-            //         }
-            //     }
-            // }
-
-
-
         } else {
             std::cout << TAB FAILED << "Can Not Open Path " << PATH << ENDL;
         }

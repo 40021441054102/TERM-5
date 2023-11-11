@@ -25,6 +25,11 @@
     # define TAB "   "
     # define ENDL "\n"
     # define SPEED 2
+    //-- Window Sections
+    enum ChessBoardSection {
+        SEC_GAME,
+        SEC_PIECES
+    };
     //-- Chess Pieces Colors
     enum ChessPieceColors : std::int8_t {
         AIBKC_BLACK = std::int8_t(0),
@@ -79,6 +84,8 @@
     //-- Chess Class Definition
     class Chess {
         private:
+            //-- Game Section or Pieces Section Flag
+            int section;
             // std::vector<Piece> pieces;
             struct Board {
                 cv::Mat window;
@@ -107,5 +114,7 @@
             }
             void generateChessBoard();
             void loadChessPieces();
+            static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
+            void onMouse(int event, int x, int y, int flags);
     };
 # endif // AI_BABAK_KARASFI_CHESS
