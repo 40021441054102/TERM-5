@@ -25,6 +25,13 @@
     # define TAB "   "
     # define ENDL "\n"
     # define SPEED 2
+    //-- Piece Selecting States
+    enum SelectingStates {
+        SELECT_NONE,
+        SELECT_PICK,
+        SELECT_MOVE,
+        SELECT_PUT
+    };
     //-- Window Sections
     enum ChessBoardSection {
         SEC_GAME,
@@ -86,7 +93,15 @@
     //-- Chess Class Definition
     class Chess {
         private:
+            cv::Mat tempMat1;
             int total;
+            struct Selected {
+                int flag;
+                int x, y;
+                int size;
+                int id;
+            };
+            Selected selected;
             //-- Game Section or Pieces Section Flag
             int section;
             std::vector<Piece> pieces;
