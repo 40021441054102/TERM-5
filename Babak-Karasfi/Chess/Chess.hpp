@@ -26,6 +26,12 @@
     # define ENDL "\n"
     # define SPEED 2
     # define PIECE_PICK_SIZE 0.85
+    # define PIECE_PLACE_SIZE 1.15
+    //-- Chess Board's Home Status
+    enum ChessHomeStatus {
+        HOME_EMPTY,
+        HOME_NOT_EMPTY
+    };
     //-- Piece Selecting States
     enum SelectingStates {
         SELECT_NONE,
@@ -125,6 +131,7 @@
                 std::string name;
                 int x, y;
                 int size;
+                int isFileld;
             };
             std::vector<ChessHome> home;
         public:

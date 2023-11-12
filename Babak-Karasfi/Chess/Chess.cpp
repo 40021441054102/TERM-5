@@ -164,7 +164,7 @@
             };
             //-- Mouse Hover
             case cv::EVENT_MOUSEMOVE: {
-                if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) {
+                if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) { // Blue Hover Box
                     for (int i = 0; i < board.piecesImages.size(); i++) {
                         if (
                             x >= board.piecesImages.at(i).x
@@ -225,13 +225,12 @@
                             }
                         }
                     }
-                } else if (selected.flag = SELECT_MOVE) {
-                    // std::cout << "Moving" << std::endl;
+                } else if (selected.flag = SELECT_MOVE) { // Moving Piece on Blue Box
                     cv::Mat tmp;
                     tempMat1.copyTo(tmp);
                     board.piecesImages.at(selected.id).image.copyTo(pieceImage);
                     cv::circle(tmp, cv::Point(x, y), 3, cv::Scalar(0, 0, 255), -1, 8, 0);
-                    std::cout << "debug" << std::endl;
+                    // std::cout << "debug" << std::endl;
                     cv::rectangle(
                         tmp,
                         cv::Point(
@@ -282,20 +281,66 @@
                     ), cv::INTER_LINEAR);
                     int r, g, b;
                     cv::Vec3b pixel;
+                    //-- Check if is Placeable on Chess Home or Not
+                    if (section == SEC_GAME) {
+                        for (int h = 0; h < home.size(); h++) {
+                            if (
+                                x >= home.at(h).x &&
+                                x < home.at(h).x + home.at(h).size
+                            ) {
+                                if (
+                                    y >= home.at(h).y &&
+                                    y < home.at(h).y + home.at(h).size
+                                ) {
+                                    cv::Scalar color;
+                                    if (home.at(h).isFileld == HOME_NOT_EMPTY) { // Piece Can Not be Placed
+                                        color = cv::Scalar(0, 0, 255);
+                                    } else if (home.at(h).isFileld == HOME_EMPTY) { // Piece Can be Placed
+                                        color = cv::Scalar(0, 255, 0);
+                                    } else { // Chess Board Home Status Unknown
+                                        color = cv::Scalar(0, 255, 255);
+                                    }
+                                    cv::rectangle(
+                                        tmp,
+                                        cv::Point(
+                                            home.at(h).x,
+                                            home.at(h).y 
+                                        ),
+                                        cv::Point(
+                                            home.at(h).x + home.at(h).size,
+                                            home.at(h).y + home.at(h).size
+                                        ),
+                                        color,
+                                        2,
+                                        cv::LINE_AA,
+                                        0
+                                    );
+                                }
+                            }
+                        }
+                    }
+                    //-- Load Image
                     for (int i = 0; i < pieceImage.cols; i++) {
                         for (int j = 0; j < pieceImage.rows; j++) {
                             pixel = pieceImage.at<cv::Vec3b>(i, j);
                             r = static_cast<int>(pixel[0]);
                             g = static_cast<int>(pixel[1]);
                             b = static_cast<int>(pixel[2]);
-                            if (r != 100 && g != 100 && b != 100) {
-                                // std::cout << r << " " << g << " " << b << std::endl;
-                                // std::cout << "here ?" << std::endl;
+                            if (
+                                (r < 95 || r > 105) &&
+                                (g < 95 || g > 105) &&
+                                (b < 95 || b > 105)
+                            ){
+                                // if (
+                                //     y + i - resizeWidth / 2 <= board.size  &&
+                                //     x + j - resizeHeight / 2 <= board.size  &&
+                                //     y + i - resizeWidth / 2 > 0 &&
+                                //     x + j - resizeHeight / 2 > 0
+                                // ) {
                                 tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[0] = int(b);
                                 tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[1] = int(g);
                                 tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[2] = int(r);
-                                // cv::circle(tmp, cv::Point(x, y), 1, cv::Scalar(255, 255, 0), -1, cv::LINE_4, 0);
-                                // cv::circle(tmp, cv::Point(x, y), 10, cv::Scalar(255, 0, 255), -1, 8, 0);
+                                // }
                             }
                         }
                     }
@@ -334,6 +379,7 @@
                 new_home.name.resize(0);
                 new_home.name.push_back(row);
                 new_home.name.push_back(char(49 + j));
+                new_home.isFileld = HOME_EMPTY;
                 std::cout << TAB LOG "Home " << new_home.name <<" has been Generated at " << new_home.center_x << " x " << new_home.center_y << ENDL;
                 home.push_back(new_home);
                 cv::circle(
