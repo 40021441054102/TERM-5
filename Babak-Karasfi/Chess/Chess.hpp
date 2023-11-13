@@ -26,7 +26,7 @@
     # define ENDL "\n"
     # define SPEED 2
     # define PIECE_PICK_SIZE 0.85
-    # define PIECE_PLACE_SIZE 1.15
+    # define PIECE_PLACE_SIZE 0.8
     //-- Chess Board's Home Status
     enum ChessHomeStatus {
         HOME_EMPTY,
@@ -61,7 +61,7 @@
     //-- Chess Homes Name
     enum ChessHomeNames {
         //-- A
-        CHESS_A1, CHESS_A2, CHESS_A3, CHESS_A4, CHESS_A5, CHESS_A6, CHESS_A7, CHESS_A8,
+        CHESS_A1 = 1, CHESS_A2, CHESS_A3, CHESS_A4, CHESS_A5, CHESS_A6, CHESS_A7, CHESS_A8,
         //-- B
         CHESS_B1, CHESS_B2, CHESS_B3, CHESS_B4, CHESS_B5, CHESS_B6, CHESS_B7, CHESS_B8,
         //- C
@@ -132,6 +132,7 @@
                 int x, y;
                 int size;
                 int isFileld;
+                int id;
             };
             std::vector<ChessHome> home;
         public:
@@ -145,5 +146,6 @@
             void loadChessPieces();
             static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
             void onMouse(int event, int x, int y, int flags);
+            bool checkPlaceable(int &, int &);
     };
 # endif // AI_BABAK_KARASFI_CHESS
