@@ -56,28 +56,42 @@
         selected.flag = SELECT_NONE;
     }
     //-- Method to Check if Piece ID is Placeable or Not
-    bool Chess::checkPlaceable(int &_piece, int &_home) {
-        switch (_piece) {
-            //-- Chess King
-            case CHESS_KING: {
-                break;
-            };
-            case CHESS_KING: {
-                break;
-            };
-            case CHESS_KING: {
-                break;
-            };
-            case CHESS_KING: {
-                break;
-            };
-            case CHESS_KING: {
-                break;
-            };
-            case CHESS_KING: {
-                break;
-            };
-        }
+    bool Chess::checkPlaceable(
+        int _piece,
+        int _color,
+        int _home_color
+    ) {
+        // switch (_piece) {
+        //     //-- Chess King
+        //     case CHESS_KING: {
+        //         break;
+        //     };
+        //     //-- Chess Queen
+        //     case CHESS_QUEEN: {
+        //         break;
+        //     };
+        //     //-- Chess Pawn
+        //     case CHESS_PAWN: {
+        //         break;
+        //     };
+        //     //-- Chess Bishop
+        //     case CHESS_BISHOP: {
+        //         if (_color == CHESS_DARK && _home_color == CHESS_LIGHT) {
+                    
+        //         } else if {
+
+        //         }
+        //         break;
+        //     };
+        //     //-- Chess Castle
+        //     case CHESS_CASTLE: {
+        //         break;
+        //     };
+        //     //-- Chess Knight
+        //     case CHESS_KNIGHT: {
+        //         break;
+        //     };
+        // }
     }
     //-- OnMouseCallback Method
     void Chess::onMouseCallback(int event, int x, int y, int flags, void* userdata) {
@@ -90,7 +104,7 @@
             case cv::EVENT_LBUTTONDOWN: {
                 // std::cout << selected.flag << std::endl;
                 // std::cout << "Needed " << SELECT_NONE << " or " << SELECT_PICK << std::endl;
-                // if (selected.flag = SELECT_NONE || selected.flag == SELECT_PUT) {
+                if (section == SEC_PIECES) {
                     for (int i = 0; i < board.piecesImages.size(); i++) {
                         if (
                             x >= board.piecesImages.at(i).x
@@ -157,7 +171,9 @@
                             }
                         }
                     }
-                // }
+                } else if (section == SEC_GAME) {
+
+                }
                 break;
             };
             //-- Left Button Up
@@ -358,6 +374,9 @@
                                         cv::Scalar(0, 0, 0),
                                         2
                                     );
+                                    tobePlaced.x = home.at(h).x + widthPadding;
+                                    tobePlaced.y = home.at(h).y + heightPadding;
+                                    tobePlaced.size = fadePiece.cols;
                                     //-- Preload Image Inside Chess Home
                                     if (home.at(h).isFileld == HOME_EMPTY) {
                                         for (int i = 0; i < fadePiece.cols; i++) {
@@ -473,9 +492,11 @@
         new_home.size = board.size / 8;
         std::cout << LOG "Generating Chess Homes" ENDL;
         char row;
+        int homeID = 8;
         for (int i = 0; i < 8; i++) {
             row = char(65 + i);
-            for (int j = 0; j < 8; j++) {
+            for (int j = 0; j < 8; j++, homeID--) {
+                new_home.id = homeID;
                 new_home.x = board.size * i / 8;
                 new_home.y = board.size * j / 8;
                 new_home.center_x = (new_home.x) + new_home.size / 2;
@@ -483,7 +504,7 @@
                 new_home.name.erase();
                 new_home.name.resize(0);
                 new_home.name.push_back(row);
-                new_home.name.push_back(char(49 + j));
+                new_home.name.push_back(char(56 - j));
                 new_home.isFileld = HOME_EMPTY;
                 std::cout << TAB LOG "Home " << new_home.name <<" has been Generated at " << new_home.center_x << " x " << new_home.center_y << ENDL;
                 home.push_back(new_home);
@@ -502,6 +523,7 @@
                 cv::imshow("Chess Board", board.window);
                 cv::waitKey(SPEED * 2);
             }
+            homeID = 8 * (i + 2);
         }
         for (int i = 0; i < 64; i++) {
             cv::rectangle(
@@ -525,7 +547,7 @@
         for (int i = 0; i < 64; i++) {
             cv::putText(
                 board.window,
-                home.at(i).name,
+                std::to_string(home.at(i).id),
                 cv::Point(
                     home.at(i).center_x - 37,
                     home.at(i).center_y + 85

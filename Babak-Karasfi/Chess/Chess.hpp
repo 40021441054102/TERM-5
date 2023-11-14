@@ -97,6 +97,31 @@
             void setID(std::int8_t &);   
             void setOnBoard(bool &);         
     };
+    //-- Chess Moves Class
+    class Move {
+        private:
+            //-- Move Name
+            std::string name;
+            //-- Move Frame
+            cv::Mat frame;
+            //-- Piece Information
+            struct PieceInfo {
+                cv::Point initPos;
+                cv::Point endPos;
+                cv::Mat image;
+            };
+            PieceInfo piece;
+    };
+    //-- Chess Gameplay Class
+    class Gameplay {
+        private:
+            std::vector<Move> moves;
+        public:
+            Gameplay();
+            //-- Method to Load Specific Move
+            //-- Method to Display Moves
+            
+    };
     //-- Chess Class Definition
     class Chess {
         private:
@@ -108,7 +133,7 @@
                 int size;
                 int id;
             };
-            Selected selected;
+            Selected selected, tobePlaced;
             //-- Game Section or Pieces Section Flag
             int section;
             std::vector<Piece> pieces;
@@ -146,6 +171,6 @@
             void loadChessPieces();
             static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
             void onMouse(int event, int x, int y, int flags);
-            bool checkPlaceable(int &, int &);
+            bool checkPlaceable(int, int, int);
     };
 # endif // AI_BABAK_KARASFI_CHESS
