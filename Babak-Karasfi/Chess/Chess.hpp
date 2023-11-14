@@ -26,6 +26,12 @@
     # define ENDL "\n"
     # define SPEED 2
     # define PIECE_PICK_SIZE 0.85
+    # define PIECE_PLACE_SIZE 0.8
+    //-- Chess Board's Home Status
+    enum ChessHomeStatus {
+        HOME_EMPTY,
+        HOME_NOT_EMPTY
+    };
     //-- Piece Selecting States
     enum SelectingStates {
         SELECT_NONE,
@@ -55,7 +61,7 @@
     //-- Chess Homes Name
     enum ChessHomeNames {
         //-- A
-        CHESS_A1, CHESS_A2, CHESS_A3, CHESS_A4, CHESS_A5, CHESS_A6, CHESS_A7, CHESS_A8,
+        CHESS_A1 = 1, CHESS_A2, CHESS_A3, CHESS_A4, CHESS_A5, CHESS_A6, CHESS_A7, CHESS_A8,
         //-- B
         CHESS_B1, CHESS_B2, CHESS_B3, CHESS_B4, CHESS_B5, CHESS_B6, CHESS_B7, CHESS_B8,
         //- C
@@ -91,18 +97,44 @@
             void setID(std::int8_t &);   
             void setOnBoard(bool &);         
     };
+    //-- Chess Moves Class
+    class Move {
+        private:
+            //-- Move Name
+            std::string name;
+            //-- Move Frame
+            cv::Mat frame;
+            //-- Piece Information
+            struct PieceInfo {
+                cv::Point initPos;
+                cv::Point endPos;
+                cv::Mat image;
+            };
+            PieceInfo piece;
+    };
+    //-- Chess Gameplay Class
+    class Gameplay {
+        private:
+            std::vector<Move> moves;
+        public:
+            Gameplay();
+            //-- Method to Load Specific Move
+            //-- Method to Display Moves
+            
+    };
     //-- Chess Class Definition
     class Chess {
         private:
             cv::Mat tempMat1, pieceImage;
             int total;
             struct Selected {
+                int index;
                 int flag;
                 int x, y;
                 int size;
                 int id;
             };
-            Selected selected;
+            Selected selected, tobePlaced;
             //-- Game Section or Pieces Section Flag
             int section;
             std::vector<Piece> pieces;
@@ -110,12 +142,13 @@
                 cv::Mat window;
                 int size;
                 struct PieceImage {
-                    int x, y;
-                    int size;
-                    cv::Mat image;
-                    std::int8_t colorID;
-                    int nameID;
                     std::string name, color;
+                    std::int8_t colorID;
+                    cv::Mat image;
+                    int nameID;
+                    int size;
+                    int x;
+                    int y;
                 };
                 std::vector<PieceImage> piecesImages;
             };
@@ -123,8 +156,10 @@
             struct ChessHome {
                 int center_x, center_y;
                 std::string name;
+                int isFileld;
                 int x, y;
                 int size;
+                int id;
             };
             std::vector<ChessHome> home;
         public:
@@ -138,5 +173,6 @@
             void loadChessPieces();
             static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
             void onMouse(int event, int x, int y, int flags);
+            bool checkPlaceable(int, int, int);
     };
 # endif // AI_BABAK_KARASFI_CHESS
