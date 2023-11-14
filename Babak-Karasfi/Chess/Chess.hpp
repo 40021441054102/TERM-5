@@ -128,6 +128,7 @@
             cv::Mat tempMat1, pieceImage;
             int total;
             struct Selected {
+                int index;
                 int flag;
                 int x, y;
                 int size;
@@ -141,12 +142,13 @@
                 cv::Mat window;
                 int size;
                 struct PieceImage {
-                    int x, y;
-                    int size;
-                    cv::Mat image;
-                    std::int8_t colorID;
-                    int nameID;
                     std::string name, color;
+                    std::int8_t colorID;
+                    cv::Mat image;
+                    int nameID;
+                    int size;
+                    int x;
+                    int y;
                 };
                 std::vector<PieceImage> piecesImages;
             };
@@ -154,9 +156,9 @@
             struct ChessHome {
                 int center_x, center_y;
                 std::string name;
+                int isFileld;
                 int x, y;
                 int size;
-                int isFileld;
                 int id;
             };
             std::vector<ChessHome> home;
