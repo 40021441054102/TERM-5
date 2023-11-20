@@ -12,16 +12,100 @@
         id = _id;
     }
     //-- Method to Set Color of Piece
-    void Piece::setColor(std::int8_t &_in) {
+    void Piece::setColor(int &_in) {
         color = _in;
+        std::cout << TAB TAB TAB INFO "Color ID : " << color << std::endl;
     }
     //-- Method to Set ID of Piece
-    void Piece::setID(std::int8_t &_in) {
+    void Piece::setID(int &_in) {
         id = _in;
+        std::cout << TAB TAB TAB INFO "Piece ID : " << id << std::endl;
+    }
+    //-- Method to Set Home of Piece
+    void Piece::setHome(int &_home) {
+        home = _home;
+        std::cout << TAB TAB TAB INFO "Home ID : " << home << std::endl;
     }
     //-- Method to Set On Board Status of Piece
     void Piece::setOnBoard(bool &_in) {
         onboard_status = _in;
+    }
+    //-- Method to Get Piece Information
+    PieceInfo Piece::getInfo() {
+        PieceInfo tmp;
+        tmp.color = color;
+        tmp.home = home;
+        tmp.id = id;
+        return tmp;
+    }
+    //-- Method to Find Piece Move Homes
+    void Piece::findMoveHomes() {
+        switch (id) {
+            case CHESS_KING: {
+                switch (home) {
+                    //-- Handle Corner Homes
+                    case CHESS_A1: {
+                        moveHomes.push_back(home + 8);
+                        moveHomes.push_back(home + 1);
+                        moveHomes.push_back(home + 8 + 1);
+                        break;
+                    };
+                    case CHESS_A8: {
+                        moveHomes.push_back(home + 8);
+                        moveHomes.push_back(home - 1);
+                        moveHomes.push_back(home + 8 - 1);
+                        break;
+                    };
+                    case CHESS_H1: {
+                        moveHomes.push_back(home - 8);
+                        moveHomes.push_back(home + 1);
+                        moveHomes.push_back(home - 8 + 1);
+                        break;
+                    };
+                    case CHESS_H8: {
+                        moveHomes.push_back(home - 8);
+                        moveHomes.push_back(home - 1);
+                        moveHomes.push_back(home - 8 - 1);
+                        break;
+                    };
+                    default: {
+                        for (int i = 0; i < 8; i++) {
+                            if (home == i * 8 + 8) {
+                                moveHomes.push_back(home + 8);
+                            } else if (home == i * 8 + 1) {
+                                //
+                            } else if (home == i + 8 - i) {
+
+                            }
+                        }
+                    }
+                };
+                break;
+            };
+            case CHESS_PAWN: {
+                break;
+            };
+            case CHESS_QUEEN: {
+                break;
+            };
+            case CHESS_BISHOP: {
+                break;
+            };
+            case CHESS_CASTLE: {
+                break;
+            };
+            case CHESS_KNIGHT: {
+                break;
+            };
+        };
+    }
+    //-- Method to Get Piece Move Homes
+    std::vector<int> Piece::getMoveHomes() {
+        findMoveHomes();
+    }
+    //-- Method to Get Piece Attack Homes
+    std::vector<int> Piece::getAttackHomes() {
+
     }
     //-- Chess Class Constructor
     Chess::Chess(
@@ -29,6 +113,7 @@
     ) {
         total = 32;
         home.resize(0);
+        programState = STATE_PLACE_PIECES;
         board.size = _size;
         board.window = cv::Mat(
             board.size,
@@ -99,6 +184,7 @@
     }
     //-- Mouse Callbacks Handling
     void Chess::onMouse(int event, int x, int y, int flags) {
+        // if (programState = STATE_PLACE_PIECES) {
         switch (event) {
             //-- Left Button Down
             case cv::EVENT_LBUTTONDOWN: {
@@ -238,8 +324,13 @@
                         }
                         tobePlaced.flag = HOME_NOT_EMPTY;
                         home.at(tobePlaced.id).isFileld = HOME_NOT_EMPTY;
+                        Piece tmpPiece;
                         tmp.copyTo(board.window);
                         std::cout << TAB SUCCESS "Piece has been Placed" ENDL;
+                        tmpPiece.setHome(home.at(tobePlaced.id).id);
+                        tmpPiece.setColor(board.piecesImages.at(selected.id).colorID);
+                        tmpPiece.setID(board.piecesImages.at(selected.id).nameID);
+                        pieces.push_back(tmpPiece);
                     } else {
                         std::cout << TAB FAILED "Can Not Place Piece" ENDL;
                     }
@@ -560,6 +651,7 @@
                 break;
             }
         };
+        // }
     }
     //-- Generate Chess Board
     void Chess::generateChessBoard() {
@@ -634,6 +726,7 @@
             cv::imshow("Chess Board", board.window);
             cv::waitKey(SPEED);
         }
+        cv::waitKey(0);
         int sign = 1;
         int color = 0;
         for (int i = 0; i < 64; i++) {
@@ -969,10 +1062,21 @@
                 cv::waitKey(50);
                 cv::imshow("Chess Board", board.window);
             }
+            //-- Add Check Button to Check if There is Possible Checkmate
         } else {
             std::cout << TAB FAILED << "Can Not Open Path " << PATH << ENDL;
         }
     }
+    //-- Method to Check Moves of Pieces on Board
+    void Chess::checkMoves() {
+        std::cout << TAB LOG "Checking Pieces Moves : " << pieces.size() << ENDL;
+        for (int i = 0; i < pieces.size(); i++) {
+            PieceInfo tmp = pieces.at(i).getInfo();
+            std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << std::endl;
+            std::vector<int> moves = pieces.at(i).getMoveHomes();
+        }
+    }
+
     //-- Main
     int main() {
         int size = 1600;
@@ -981,7 +1085,20 @@
         chess.generateChessBoard();
         // cv::waitKey(0);
         chess.loadChessPieces();
-        cv::waitKey(0);
+        //-- Check Key
+        int key;
+        while (true) {
+            key = cv::waitKey(0);
+            if (key == int('q') || key == int(' ')) {
+                std::cout << SUCCESS "Program has been Terminated" ENDL;
+                break;
+            } else if (key == int('c')) {
+                chess.programState = STATE_CHECK_CHECKMATE;
+                std::cout << LOG "Checking Checkmate States ..." ENDL;
+                chess.checkMoves();
+            }
+        }
+        // cv::waitKey(0);
     }
 
 # endif // AI_BABAK_KARASFI_CHESS
