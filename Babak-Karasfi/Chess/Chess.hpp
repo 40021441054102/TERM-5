@@ -21,12 +21,18 @@
     # define SUCCESS "\033[38;2;0;255;0m[SUCCESS]\033[0m "
     # define FAILED "\033[38;2;255;0;0m[FAILED]\033[0m "
     # define LOG "\033[38;2;150;150;150m[LOG]\033[0m "
+    # define INFO "\033[38;2;0;150;150m[INFO]\033[0m "
     # define PATH "Assets/"
     # define TAB "   "
     # define ENDL "\n"
     # define SPEED 2
     # define PIECE_PICK_SIZE 0.85
     # define PIECE_PLACE_SIZE 0.8
+    //-- Program States
+    enum ProgramStates {
+        STATE_PLACE_PIECES,
+        STATE_CHECK_CHECKMATE
+    };
     //-- Chess Board's Home Status
     enum ChessHomeStatus {
         HOME_EMPTY,
@@ -45,9 +51,9 @@
         SEC_PIECES
     };
     //-- Chess Pieces Colors
-    enum ChessPieceColors : std::int8_t {
-        CHESS_DARK = std::int8_t(0),
-        CHESS_LIGHT = std::int8_t(1)
+    enum ChessPieceColors {
+        CHESS_DARK = 0,
+        CHESS_LIGHT = 1
     };
     //-- Chess Pieces Name
     enum ChessPieceNames {
@@ -77,12 +83,20 @@
         //-- H
         CHESS_H1, CHESS_H2, CHESS_H3, CHESS_H4, CHESS_H5, CHESS_H6, CHESS_H7, CHESS_H8,
     };
+    struct PieceInfo {
+        int color;
+        int home;
+        int id;
+    };
     //-- Piece Class Definition
     class Piece {
         private:
-            std::int8_t color;
-            std::int8_t id;
+            int id;
+            int home;
+            int color;
             bool onboard_status;
+            std::vector<int> moveHomes;
+            std::vector<int> attackHomes;
         public:
             Piece(
                 std::int8_t &,
@@ -92,10 +106,18 @@
             Piece() {
                 color = std::int8_t(CHESS_DARK);
                 id = std::int8_t(CHESS_PAWN);
+                attackHomes.resize(0);
+                moveHomes.resize(0);
             }
-            void setColor(std::int8_t &);
-            void setID(std::int8_t &);   
-            void setOnBoard(bool &);         
+            std::vector<int> getMoveHomes();
+            std::vector<int> getAttackHomes();
+            void setColor(int &);
+            PieceInfo getInfo();
+            void setID(int &);
+            void setOnBoard(bool &);
+            void setHome(int &);
+            void findMoveHomes();
+            void findAttackHomes();
     };
     //-- Chess Moves Class
     class Move {
@@ -143,7 +165,7 @@
                 int size;
                 struct PieceImage {
                     std::string name, color;
-                    std::int8_t colorID;
+                    int colorID;
                     cv::Mat image;
                     int nameID;
                     int size;
@@ -163,6 +185,7 @@
             };
             std::vector<ChessHome> home;
         public:
+            bool programState;
             Chess(
                 int &
             );
@@ -174,5 +197,6 @@
             static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
             void onMouse(int event, int x, int y, int flags);
             bool checkPlaceable(int, int, int);
+            void checkMoves();
     };
 # endif // AI_BABAK_KARASFI_CHESS
