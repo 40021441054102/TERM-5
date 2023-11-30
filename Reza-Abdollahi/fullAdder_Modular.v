@@ -23,6 +23,7 @@ module test_fullAdder();
     wire cout, sum;
     fullAdder test(.x(x), .y(y), .cin(cin), .cout(cout), .sum(sum));
     initial begin
+        $monitor("x=%b, y=%b, cin=%b | cout=%b, sum=%b", x, y, cin, cout, sum);
         x = 1'b0;
         y = 1'b0;
         cin = 1'b0;
