@@ -70,14 +70,41 @@
                     };
                     default: {
                         for (int i = 0; i < 8; i++) {
-                            if (home == i * 8 + 8) {
+                            if (home == i * 8 + 8) { //-- Handle Top Edge
                                 moveHomes.push_back(home + 8);
-                            } else if (home == i * 8 + 1) {
-                                //
-                            } else if (home == i + 8 - i) {
-
+                                moveHomes.push_back(home + 8 - 1);
+                                moveHomes.push_back(home - 8);
+                                moveHomes.push_back(home - 8 - 1);
+                                moveHomes.push_back(home - 1);
+                            } else if (home == i * 8 + 1) { //-- Handle Buttom Edge
+                                moveHomes.push_back(home + 8);
+                                moveHomes.push_back(home + 8 + 1);
+                                moveHomes.push_back(home - 8);
+                                moveHomes.push_back(home - 8 + 1);
+                                moveHomes.push_back(home + 1);
+                            } else if (home == i + 1) { //-- Handle Left Edge
+                                moveHomes.push_back(home + 1);
+                                moveHomes.push_back(home + 1 + 8);
+                                moveHomes.push_back(home - 1);
+                                moveHomes.push_back(home - 1 + 8);
+                                moveHomes.push_back(home + 8);
+                            } else if (home == 56 + i + 1) { //-- Handle Right Edge
+                                moveHomes.push_back(home + 1);
+                                moveHomes.push_back(home + 1 - 8);
+                                moveHomes.push_back(home - 1);
+                                moveHomes.push_back(home - 1 - 8);
+                                moveHomes.push_back(home - 8);
                             }
                         }
+                        //-- Handle Inner Homes
+                        moveHomes.push_back(home + 1); //-- Top
+                        moveHomes.push_back(home + 1 + 8); //-- Top Right
+                        moveHomes.push_back(home + 1 - 8); //-- Top Left
+                        moveHomes.push_back(home + 8); //-- Right
+                        moveHomes.push_back(home - 8); //- Left
+                        moveHomes.push_back(home - 1 + 8); //-- Buttom Right
+                        moveHomes.push_back(home - 1 - 8); //-- Buttom Left
+                        moveHomes.push_back(home - 1); //-- Buttom
                     }
                 };
                 break;
@@ -98,10 +125,15 @@
                 break;
             };
         };
+        //-- Print Result
+        for (int i = 0; i < moveHomes.size(); i++) {
+            std::cout << TAB TAB TAB MOVE "Can be Moved to Home " << moveHomes.at(i) << std::endl;
+        }
     }
     //-- Method to Get Piece Move Homes
     std::vector<int> Piece::getMoveHomes() {
         findMoveHomes();
+        return moveHomes;
     }
     //-- Method to Get Piece Attack Homes
     std::vector<int> Piece::getAttackHomes() {
@@ -726,7 +758,7 @@
             cv::imshow("Chess Board", board.window);
             cv::waitKey(SPEED);
         }
-        cv::waitKey(0);
+        // cv::waitKey(0);
         int sign = 1;
         int color = 0;
         for (int i = 0; i < 64; i++) {
@@ -1069,11 +1101,42 @@
     }
     //-- Method to Check Moves of Pieces on Board
     void Chess::checkMoves() {
-        std::cout << TAB LOG "Checking Pieces Moves : " << pieces.size() << ENDL;
+        int pieceCount = pieces.size();
+        if (pieceCount == 1) {
+            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Piece" << ENDL;
+        } else {
+            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
+        }
         for (int i = 0; i < pieces.size(); i++) {
             PieceInfo tmp = pieces.at(i).getInfo();
-            std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << std::endl;
+            std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
             std::vector<int> moves = pieces.at(i).getMoveHomes();
+            cv::Mat tmpMat;
+            board.window.copyTo(tmpMat);
+            for (int j = 0; j < moves.size(); j++) {
+                // std::cout << "wow" << std::endl;
+                for (int h = 0; h < home.size(); h++) {
+                    if (home.at(h).id == tmp.home) {
+                        cv::rectangle(
+                            tmpMat,
+                            cv::Point(
+                                home.at(moves.at(j)).x,
+                                home.at(moves.at(j)).y
+                            ),
+                            cv::Point(
+                                home.at(moves.at(j)).x + home.at(moves.at(j)).size,
+                                home.at(moves.at(j)).y + home.at(moves.at(j)).size
+                            ),
+                            cv::Scalar(
+                                255, 255, 0
+                            ),
+                            4, 8, 0
+                        );
+                    }
+                }
+                cv::imshow("Chess Board", tmpMat);
+                cv::waitKey(100);
+            }
         }
     }
 
