@@ -68,7 +68,7 @@
                         moveHomes.push_back(home - 8 - 1);
                         break;
                     };
-                    default: {
+                    default: { //-- This has Bug, It Must be Fixed
                         for (int i = 0; i < 8; i++) {
                             if (home == i * 8 + 8) { //-- Handle Top Edge
                                 moveHomes.push_back(home + 8);
