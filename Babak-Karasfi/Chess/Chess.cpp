@@ -1074,9 +1074,9 @@
             PieceInfo tmp = pieces.at(i).getInfo();
             std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << std::endl;
             std::vector<int> moves = pieces.at(i).getMoveHomes();
+            std::cout << "next" << std::endl;
         }
     }
-
     //-- Main
     int main() {
         int size = 1600;
