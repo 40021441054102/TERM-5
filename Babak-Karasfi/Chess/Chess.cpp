@@ -1,3 +1,8 @@
+//-- Disable Warnings
+# pragma GCC diagnostic push
+# pragma GCC diagnostic ignored "-Wunused-variable"
+# pragma GCC diagnostic ignored "-Wsign-compare"
+# pragma GCC diagnostic ignored "-Wunused-value"
 # ifndef AI_BABAK_KARASFI_CHESS
     //-- Include Header File
     # include "Chess.hpp"
@@ -137,7 +142,7 @@
     }
     //-- Method to Get Piece Attack Homes
     std::vector<int> Piece::getAttackHomes() {
-
+        return attackHomes;
     }
     //-- Chess Class Constructor
     Chess::Chess(
@@ -179,6 +184,7 @@
         int _color,
         int _home_color
     ) {
+        return true;
         // switch (_piece) {
         //     //-- Chess King
         //     case CHESS_KING: {
@@ -293,46 +299,12 @@
                 } else if (section == SEC_GAME) {
                     if (picked_up == true) {
                         if (tobePlaced.flag == HOME_EMPTY) {
-                            {
-                        //     int r, g, b;
-                        //     cv::Vec3b pixel;
-                        //     cv::Mat tmp, piece;
-                        //     board.window.copyTo(tmp);
-                        //     board.piecesImages.at(tobePlaced.id).image.copyTo(piece);
-                        //     int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
-                        //     int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                        //     cv::resize(piece, piece, cv::Size(
-                        //         placedWidth,
-                        //         placedHeight
-                        //     ), cv::INTER_LINEAR);
-                        //     std::cout << "debug1" << std::endl;
-                        //     std::cout << "debug2" << std::endl;
-                        //     for (int i = 0; i < tobePlaced.size; i++) {
-                        //         for (int j = 0; j < tobePlaced.size; j++) {
-                        //             pixel = piece.at<cv::Vec3b>(i, j);
-                        //             r = static_cast<int>(pixel[0]);
-                        //             g = static_cast<int>(pixel[1]);
-                        //             b = static_cast<int>(pixel[2]);
-                        //             if (
-                        //                 (r < 95 || r > 105) &&
-                        //                 (g < 95 || g > 105) &&
-                        //                 (b < 95 || b > 105)
-                        //             ){
-                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[0] = int(int(b) / 2);
-                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[1] = int(int(g) / 2);
-                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[2] = int(int(r) / 2);
-                        //             }
-                        //         }
-                        //     }
-                            }
                             cv::Mat tmp, fadePiece;
                             tempMat1.copyTo(tmp);
                             board.piecesImages.at(selected.id).image.copyTo(pieceImage);
                             pieceImage.copyTo(fadePiece);
                             int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
                             int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                            int widthPadding = (home.at(0).size - placedWidth) / 2;
-                            int heightPadding = (home.at(0).size - placedHeight) / 2;
                             cv::resize(fadePiece, fadePiece, cv::Size(
                                 placedWidth,
                                 placedHeight
@@ -374,7 +346,7 @@
             };
             //-- Left Button Up
             case cv::EVENT_LBUTTONUP: {
-                if (selected.flag = SELECT_PICK) {
+                if (selected.flag == SELECT_PICK) {
                     selected.flag = SELECT_MOVE;
                     cv::Mat tmp;
                     board.window.copyTo(tmp);
@@ -461,7 +433,7 @@
                             }
                         }
                     }
-                } else if (selected.flag = SELECT_MOVE) { // Moving Piece on Blue Box
+                } else if (selected.flag == SELECT_MOVE) { // Moving Piece on Blue Box
                     cv::Mat tmp, fadePiece;
                     tempMat1.copyTo(tmp);
                     board.piecesImages.at(selected.id).image.copyTo(pieceImage);
@@ -996,7 +968,6 @@
                     }
                 }
             }
-            int padding = board.window.cols - board.size;
             cv::Point startPoint(board.size + 50, 40);
             cv::imshow("Chess Board", board.window);
             int startposx = 0, startposy = 0;
@@ -1234,23 +1205,38 @@
         chess.generateChessBoard();
         //-- Load Chess Pieces
         chess.loadChessPieces();
+        //-- Check Moves
+        while (true) {
+            int key = cv::waitKey(0);
+            if (key == int('q')) {
+                break;
+            } else if (key == int('c')) {
+                if (cv::waitKey(0) == int('h')) {
+                    std::cout << LOG "Waiting for Key ..." << std::endl;
+                    if (cv::waitKey(0) == int('e')) {
+                        if (cv::waitKey(0) == int('c')) {
+                            if (cv::waitKey(0) == int('k')) {
+                                std::cout << TAB SUCCESS "Checking Checkmate States ..." ENDL;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            continue;
+                        }
+                    } else {
+                        continue;
+                    }
+                } else {
+                    continue;
+                }
+            } else {
+                continue;
+            }
+        }
         cv::waitKey(0);
         cv::destroyAllWindows();
         return 0;
-        // //-- Check Key
-        // int key;
-        // while (true) {
-        //     key = cv::waitKey(0);
-        //     if (key == int('q') || key == int(' ')) {
-        //         std::cout << SUCCESS "Program has been Terminated" ENDL;
-        //         break;
-        //     } else if (key == int('c')) {
-        //         chess.programState = STATE_CHECK_CHECKMATE;
-        //         std::cout << LOG "Checking Checkmate States ..." ENDL;
-        //         chess.checkMoves();
-        //     }
-        // }
-        // // cv::waitKey(0);
     }
 
 # endif // AI_BABAK_KARASFI_CHESS
+# pragma GCC diagnostic pop
