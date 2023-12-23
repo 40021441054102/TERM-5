@@ -18,6 +18,7 @@
         # include <opencv4/opencv2/highgui.hpp>
         # include <opencv4/opencv2/imgproc.hpp>
     # endif // OPENCV_HIGHGUI
+    # define WARNING "\033[38;2;255;255;0m[WARNING]\033[0m "
     # define SUCCESS "\033[38;2;0;255;0m[SUCCESS]\033[0m "
     # define FAILED "\033[38;2;255;0;0m[FAILED]\033[0m "
     # define LOG "\033[38;2;150;150;150m[LOG]\033[0m "
@@ -148,6 +149,7 @@
     //-- Chess Class Definition
     class Chess {
         private:
+            bool picked_up;
             cv::Mat tempMat1, pieceImage;
             int total;
             struct Selected {
@@ -186,6 +188,7 @@
             };
             std::vector<ChessHome> home;
         public:
+            void startAnimation();
             bool programState;
             Chess(
                 int &

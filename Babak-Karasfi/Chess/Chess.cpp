@@ -145,6 +145,7 @@
     ) {
         total = 32;
         home.resize(0);
+        picked_up = false;
         programState = STATE_PLACE_PIECES;
         board.size = _size;
         board.window = cv::Mat(
@@ -216,7 +217,6 @@
     }
     //-- Mouse Callbacks Handling
     void Chess::onMouse(int event, int x, int y, int flags) {
-        // if (programState = STATE_PLACE_PIECES) {
         switch (event) {
             //-- Left Button Down
             case cv::EVENT_LBUTTONDOWN: {
@@ -289,82 +289,85 @@
                             }
                         }
                     }
+                    picked_up = true;
                 } else if (section == SEC_GAME) {
-                    if (tobePlaced.flag == HOME_EMPTY) {
-                        {
-                    //     int r, g, b;
-                    //     cv::Vec3b pixel;
-                    //     cv::Mat tmp, piece;
-                    //     board.window.copyTo(tmp);
-                    //     board.piecesImages.at(tobePlaced.id).image.copyTo(piece);
-                    //     int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
-                    //     int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                    //     cv::resize(piece, piece, cv::Size(
-                    //         placedWidth,
-                    //         placedHeight
-                    //     ), cv::INTER_LINEAR);
-                    //     std::cout << "debug1" << std::endl;
-                    //     std::cout << "debug2" << std::endl;
-                    //     for (int i = 0; i < tobePlaced.size; i++) {
-                    //         for (int j = 0; j < tobePlaced.size; j++) {
-                    //             pixel = piece.at<cv::Vec3b>(i, j);
-                    //             r = static_cast<int>(pixel[0]);
-                    //             g = static_cast<int>(pixel[1]);
-                    //             b = static_cast<int>(pixel[2]);
-                    //             if (
-                    //                 (r < 95 || r > 105) &&
-                    //                 (g < 95 || g > 105) &&
-                    //                 (b < 95 || b > 105)
-                    //             ){
-                    //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[0] = int(int(b) / 2);
-                    //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[1] = int(int(g) / 2);
-                    //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[2] = int(int(r) / 2);
-                    //             }
-                    //         }
-                    //     }
-                        }
-                        cv::Mat tmp, fadePiece;
-                        tempMat1.copyTo(tmp);
-                        board.piecesImages.at(selected.id).image.copyTo(pieceImage);
-                        pieceImage.copyTo(fadePiece);
-                        int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
-                        int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                        int widthPadding = (home.at(0).size - placedWidth) / 2;
-                        int heightPadding = (home.at(0).size - placedHeight) / 2;
-                        cv::resize(fadePiece, fadePiece, cv::Size(
-                            placedWidth,
-                            placedHeight
-                        ), cv::INTER_LINEAR);
-                        int r, g, b;
-                        cv::Vec3b pixel;
-                        for (int i = 0; i < fadePiece.cols; i++) {
-                            for (int j = 0; j < fadePiece.rows; j++) {
-                                pixel = fadePiece.at<cv::Vec3b>(i, j);
-                                r = static_cast<int>(pixel[0]);
-                                g = static_cast<int>(pixel[1]);
-                                b = static_cast<int>(pixel[2]);
-                                if (
-                                    (r < 95 || r > 105) &&
-                                    (g < 95 || g > 105) &&
-                                    (b < 95 || b > 105)
-                                ){
-                                    tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[0] = int(int(b));
-                                    tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[1] = int(int(g));
-                                    tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[2] = int(int(r));
+                    if (picked_up == true) {
+                        if (tobePlaced.flag == HOME_EMPTY) {
+                            {
+                        //     int r, g, b;
+                        //     cv::Vec3b pixel;
+                        //     cv::Mat tmp, piece;
+                        //     board.window.copyTo(tmp);
+                        //     board.piecesImages.at(tobePlaced.id).image.copyTo(piece);
+                        //     int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
+                        //     int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
+                        //     cv::resize(piece, piece, cv::Size(
+                        //         placedWidth,
+                        //         placedHeight
+                        //     ), cv::INTER_LINEAR);
+                        //     std::cout << "debug1" << std::endl;
+                        //     std::cout << "debug2" << std::endl;
+                        //     for (int i = 0; i < tobePlaced.size; i++) {
+                        //         for (int j = 0; j < tobePlaced.size; j++) {
+                        //             pixel = piece.at<cv::Vec3b>(i, j);
+                        //             r = static_cast<int>(pixel[0]);
+                        //             g = static_cast<int>(pixel[1]);
+                        //             b = static_cast<int>(pixel[2]);
+                        //             if (
+                        //                 (r < 95 || r > 105) &&
+                        //                 (g < 95 || g > 105) &&
+                        //                 (b < 95 || b > 105)
+                        //             ){
+                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[0] = int(int(b) / 2);
+                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[1] = int(int(g) / 2);
+                        //                 tmp.at<cv::Vec3b>(tobePlaced.y, tobePlaced.x)[2] = int(int(r) / 2);
+                        //             }
+                        //         }
+                        //     }
+                            }
+                            cv::Mat tmp, fadePiece;
+                            tempMat1.copyTo(tmp);
+                            board.piecesImages.at(selected.id).image.copyTo(pieceImage);
+                            pieceImage.copyTo(fadePiece);
+                            int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
+                            int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
+                            int widthPadding = (home.at(0).size - placedWidth) / 2;
+                            int heightPadding = (home.at(0).size - placedHeight) / 2;
+                            cv::resize(fadePiece, fadePiece, cv::Size(
+                                placedWidth,
+                                placedHeight
+                            ), cv::INTER_LINEAR);
+                            int r, g, b;
+                            cv::Vec3b pixel;
+                            for (int i = 0; i < fadePiece.cols; i++) {
+                                for (int j = 0; j < fadePiece.rows; j++) {
+                                    pixel = fadePiece.at<cv::Vec3b>(i, j);
+                                    r = static_cast<int>(pixel[0]);
+                                    g = static_cast<int>(pixel[1]);
+                                    b = static_cast<int>(pixel[2]);
+                                    if (
+                                        (r < 95 || r > 105) &&
+                                        (g < 95 || g > 105) &&
+                                        (b < 95 || b > 105)
+                                    ){
+                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[0] = int(int(b));
+                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[1] = int(int(g));
+                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[2] = int(int(r));
+                                    }
                                 }
                             }
+                            tobePlaced.flag = HOME_NOT_EMPTY;
+                            home.at(tobePlaced.id).isFileld = HOME_NOT_EMPTY;
+                            Piece tmpPiece;
+                            tmp.copyTo(board.window);
+                            std::cout << TAB SUCCESS "Piece has been Placed" ENDL;
+                            tmpPiece.setHome(home.at(tobePlaced.id).id);
+                            tmpPiece.setColor(board.piecesImages.at(selected.id).colorID);
+                            tmpPiece.setID(board.piecesImages.at(selected.id).nameID);
+                            pieces.push_back(tmpPiece);
+                        } else {
+                            std::cout << TAB FAILED "Can Not Place Piece" ENDL;
                         }
-                        tobePlaced.flag = HOME_NOT_EMPTY;
-                        home.at(tobePlaced.id).isFileld = HOME_NOT_EMPTY;
-                        Piece tmpPiece;
-                        tmp.copyTo(board.window);
-                        std::cout << TAB SUCCESS "Piece has been Placed" ENDL;
-                        tmpPiece.setHome(home.at(tobePlaced.id).id);
-                        tmpPiece.setColor(board.piecesImages.at(selected.id).colorID);
-                        tmpPiece.setID(board.piecesImages.at(selected.id).nameID);
-                        pieces.push_back(tmpPiece);
-                    } else {
-                        std::cout << TAB FAILED "Can Not Place Piece" ENDL;
                     }
                 }
                 break;
@@ -683,7 +686,6 @@
                 break;
             }
         };
-        // }
     }
     //-- Generate Chess Board
     void Chess::generateChessBoard() {
@@ -692,6 +694,7 @@
         std::cout << LOG "Generating Chess Homes" ENDL;
         char row;
         int homeID = 8;
+        //-- Generate Homes
         for (int i = 0; i < 8; i++) {
             row = char(65 + i);
             for (int j = 0; j < 8; j++, homeID--) {
@@ -705,7 +708,7 @@
                 new_home.name.push_back(row);
                 new_home.name.push_back(char(56 - j));
                 new_home.isFileld = HOME_EMPTY;
-                std::cout << TAB LOG "Home " << new_home.name <<" has been Generated at " << new_home.center_x << " x " << new_home.center_y << ENDL;
+                std::cout << TAB LOG "Home " << new_home.name <<" has been Generated at " << new_home.center_x << " x " << new_home.center_y << " with ID " << new_home.id << ENDL;
                 home.push_back(new_home);
                 cv::circle(
                     board.window,
@@ -724,6 +727,7 @@
             }
             homeID = 8 * (i + 2);
         }
+        //-- Draw Border of Homes
         for (int i = 0; i < 64; i++) {
             cv::rectangle(
                 board.window,
@@ -743,6 +747,7 @@
             cv::imshow("Chess Board", board.window);
             cv::waitKey(SPEED);
         }
+        //-- Write Home Names
         for (int i = 0; i < 64; i++) {
             cv::putText(
                 board.window,
@@ -756,11 +761,11 @@
                 cv::Scalar(240, 150, 150)
             );
             cv::imshow("Chess Board", board.window);
-            cv::waitKey(SPEED);
+            cv::waitKey(SPEED * 10);
         }
-        // cv::waitKey(0);
         int sign = 1;
         int color = 0;
+        //-- Draw White and Black Homes
         for (int i = 0; i < 64; i++) {
             if (i % 8 != 0) {
                 sign *= -1;
@@ -790,6 +795,7 @@
         }
         sign = 1;
         cv::Scalar rgbColor;
+        //-- Draw Brown and Cream Homes
         for (int i = 0; i < 64; i++) {
             if (i % 8 != 0) {
                 sign *= -1;
@@ -825,15 +831,17 @@
         struct dirent *action;
         file = opendir(PATH);
         std::cout << LOG "Loading Chess Pieces" ENDL;
+        //-- Check if Chess Pieces Directory is Opened or Not
         if (file) {
+            std::cout << TAB SUCCESS << PATH << " Directory has been Opened" ENDL;
             Display* disp = XOpenDisplay(NULL);
             Screen* scrn = DefaultScreenOfDisplay(disp);
             cv::imshow("Chess Board", board.window);
-            std::cout << TAB SUCCESS << PATH << " Directory has been Opened" ENDL;
             cv::Mat chessboard;
             board.window.copyTo(chessboard);
             int panel_width = board.size * 0.313;
             int addition = 2;
+            //-- Resize Chess Board to Add Panel Width
             while (true) {
                 cv::resize(
                     board.window,
@@ -870,6 +878,7 @@
                 }
             }
             XCloseDisplay(disp);
+            //-- Write Home Names on The Board
             for (int i = 0; i < 64; i++) {
                 cv::putText(
                     board.window,
@@ -980,18 +989,20 @@
                     }
                     std::cout << TAB TAB SUCCESS "Imported" ENDL;
                 } else {
-                    std::cout << TAB TAB FAILED "Can Not Import Because It is Not PNG" ENDL;
+                    if (address[0] == '.') {
+                        std::cout << TAB TAB WARNING "Passed Dot File Type" ENDL;
+                    } else {
+                        std::cout << TAB TAB FAILED "Can Not Import Because It is Not PNG" ENDL;
+                    }
                 }
             }
-            // int padding = panel_width - (2 * home.at(0).size); 
             int padding = board.window.cols - board.size;
             cv::Point startPoint(board.size + 50, 40);
             cv::imshow("Chess Board", board.window);
-            // std::cout << padding << ENDL;
             int startposx = 0, startposy = 0;
             cv::Mat tmp;
             board.window.copyTo(tmp);
-            //-- Draw Pieces Sections
+            //-- Draw Pieces Panel Sections
             for (int i = 0; i < board.piecesImages.size(); i++) {
                 if (i <= 5) {
                     startposx = home.at(i).x + startPoint.x;
@@ -1026,7 +1037,7 @@
                                 board.window,
                                 cv::Point(x, height),
                                 2,
-                                cv::Scalar(200, 0, 0),
+                                cv::Scalar(230, 10, 0),
                                 -1,
                                 cv::LINE_AA,
                                 0
@@ -1042,7 +1053,7 @@
                 cv::waitKey(50);
             }
             cv::imshow("Chess Board", board.window);
-            //-- Draw Pieces Box
+            //-- Draw Pieces Panel Boxes
             for (int i = 0; i < board.piecesImages.size(); i++) {
                 for (
                     int x = board.piecesImages.at(i).x, x1 = 0;
@@ -1068,9 +1079,9 @@
                 cv::waitKey(50);
                 cv::imshow("Chess Board", board.window);
             }
-            //-- Add Pieces to Board
             int r, g, b;
             cv::Vec3b pixel;
+            //-- Add Pieces to Board
             for (int i = 0; i < board.piecesImages.size(); i++) {
                 for (
                     int x = board.piecesImages.at(i).x, x1 = 0;
@@ -1091,13 +1102,14 @@
                         board.window.at<cv::Vec3b>(y, x)[2] = r;
                     }
                 }
-                cv::waitKey(50);
+                cv::waitKey(SPEED * 30);
                 cv::imshow("Chess Board", board.window);
             }
-            //-- Add Check Button to Check if There is Possible Checkmate
         } else {
             std::cout << TAB FAILED << "Can Not Open Path " << PATH << ENDL;
         }
+        //-- Close Opened Directory
+        closedir(file);
     }
     //-- Method to Check Moves of Pieces on Board
     void Chess::checkMoves() {
@@ -1139,29 +1151,106 @@
             }
         }
     }
-
+    //-- Start Animation
+    void Chess::startAnimation() {
+        int color = 0;
+        int radius = board.size;
+        int maxcolor = 255;
+        for (int j = 0; j < 180; j++) {
+            for (int i = 0; i < radius / 2; i++) {
+                color = i * maxcolor / board.size;
+                if (i % ((j + 1) * 2) == 0) {
+                    cv::rectangle(
+                        board.window,
+                        cv::Point(
+                            board.size / 2 - i,
+                            board.size / 2 - i
+                        ),
+                        cv::Point(
+                            board.size / 2 + i,
+                            board.size / 2 + i
+                        ),
+                        cv::Scalar(
+                            color, color, 0
+                        ),
+                        2,
+                        cv::LINE_AA,
+                        0
+                    );
+                    cv::imshow("Chess Board", board.window);
+                    cv::waitKey(SPEED);
+                }
+            }
+            maxcolor /= 0.37;
+        }
+        for (int i = 0; i < radius / 15; i++) {
+            cv::rectangle(
+                board.window,
+                cv::Point(
+                    board.size / 2 - i,
+                    board.size / 2 - i
+                ),
+                cv::Point(
+                    board.size / 2 + i,
+                    board.size / 2 + i
+                ),
+                cv::Scalar(
+                    0, 0, 0
+                ),
+                2,
+                cv::LINE_AA,
+                0
+            );
+            cv::imshow("Chess Board", board.window);
+            cv::waitKey(SPEED * 4);
+        }
+        cv::Size textSize = cv::getTextSize("by Ramtin Kosari", cv::FONT_HERSHEY_COMPLEX, 2, 1, nullptr);
+        cv::Point textPosition(board.size / 2 - textSize.width / 2, board.size / 2 + textSize.height / 2);
+        cv::Size textSize2 = cv::getTextSize("RK OpenCV Graphics Support", cv::FONT_HERSHEY_COMPLEX, 1, 1, nullptr);
+        cv::Point textPosition2(board.size / 2 - textSize2.width / 2, board.size / 2 + textSize2.height / 2 + 100);
+        for (int i = 0; i < 255 * 3; i++) {
+            // output.copyTo(tmp);
+            cv::putText(board.window, "By Ramtin Kosari", textPosition, cv::FONT_HERSHEY_COMPLEX, 2, cv::Scalar(i / 4 + 20, i / 4 + 20, i / 4));
+            if (i < 255) {
+                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(i, i, 0));
+            } else if (i >= 255 * 2) {
+                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255 - (i - 255 * 2), 255 - (i - 255 * 2), 0));
+            } else {
+                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255, 255, 0));
+            }
+            cv::imshow("Chess Board", board.window);
+            cv::waitKey(5);
+        }
+        cv::imshow("Chess Board", board.window);
+    }
     //-- Main
     int main() {
         int size = 1600;
+        //-- Initialize Chess Window and Board
         Chess chess(size);
-        cv::waitKey(0);
+        //-- Show StartUp Animation
+        // chess.startAnimation();
+        //-- Generate Chess Board
         chess.generateChessBoard();
-        // cv::waitKey(0);
+        //-- Load Chess Pieces
         chess.loadChessPieces();
-        //-- Check Key
-        int key;
-        while (true) {
-            key = cv::waitKey(0);
-            if (key == int('q') || key == int(' ')) {
-                std::cout << SUCCESS "Program has been Terminated" ENDL;
-                break;
-            } else if (key == int('c')) {
-                chess.programState = STATE_CHECK_CHECKMATE;
-                std::cout << LOG "Checking Checkmate States ..." ENDL;
-                chess.checkMoves();
-            }
-        }
-        // cv::waitKey(0);
+        cv::waitKey(0);
+        cv::destroyAllWindows();
+        return 0;
+        // //-- Check Key
+        // int key;
+        // while (true) {
+        //     key = cv::waitKey(0);
+        //     if (key == int('q') || key == int(' ')) {
+        //         std::cout << SUCCESS "Program has been Terminated" ENDL;
+        //         break;
+        //     } else if (key == int('c')) {
+        //         chess.programState = STATE_CHECK_CHECKMATE;
+        //         std::cout << LOG "Checking Checkmate States ..." ENDL;
+        //         chess.checkMoves();
+        //     }
+        // }
+        // // cv::waitKey(0);
     }
 
 # endif // AI_BABAK_KARASFI_CHESS
