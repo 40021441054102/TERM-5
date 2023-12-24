@@ -346,7 +346,7 @@
             };
             //-- Left Button Up
             case cv::EVENT_LBUTTONUP: {
-                if (selected.flag == SELECT_PICK) {
+                // if (selected.flag = SELECT_PICK) {
                     selected.flag = SELECT_MOVE;
                     cv::Mat tmp;
                     board.window.copyTo(tmp);
@@ -368,7 +368,7 @@
                     cv::imshow("Chess Board", tmp);
                     tmp.copyTo(tempMat1);
                     break;
-                }
+                // }
             };
             //-- Mouse Hover
             case cv::EVENT_MOUSEMOVE: {
@@ -1080,7 +1080,7 @@
             std::cout << TAB FAILED << "Can Not Open Path " << PATH << ENDL;
         }
         //-- Close Opened Directory
-        closedir(file);
+        // closedir(file);
     }
     //-- Method to Check Moves of Pieces on Board
     void Chess::checkMoves() {
