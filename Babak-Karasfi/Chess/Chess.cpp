@@ -185,37 +185,6 @@
         int _home_color
     ) {
         return true;
-        // switch (_piece) {
-        //     //-- Chess King
-        //     case CHESS_KING: {
-        //         break;
-        //     };
-        //     //-- Chess Queen
-        //     case CHESS_QUEEN: {
-        //         break;
-        //     };
-        //     //-- Chess Pawn
-        //     case CHESS_PAWN: {
-        //         break;
-        //     };
-        //     //-- Chess Bishop
-        //     case CHESS_BISHOP: {
-        //         if (_color == CHESS_DARK && _home_color == CHESS_LIGHT) {
-                    
-        //         } else if {
-
-        //         }
-        //         break;
-        //     };
-        //     //-- Chess Castle
-        //     case CHESS_CASTLE: {
-        //         break;
-        //     };
-        //     //-- Chess Knight
-        //     case CHESS_KNIGHT: {
-        //         break;
-        //     };
-        // }
     }
     //-- OnMouseCallback Method
     void Chess::onMouseCallback(int event, int x, int y, int flags, void* userdata) {
@@ -223,441 +192,443 @@
     }
     //-- Mouse Callbacks Handling
     void Chess::onMouse(int event, int x, int y, int flags) {
-        switch (event) {
-            //-- Left Button Down
-            case cv::EVENT_LBUTTONDOWN: {
-                // std::cout << selected.flag << std::endl;
-                // std::cout << "Needed " << SELECT_NONE << " or " << SELECT_PICK << std::endl;
-                if (section == SEC_PIECES) {
-                    for (int i = 0; i < board.piecesImages.size(); i++) {
-                        if (
-                            x >= board.piecesImages.at(i).x
-                            &&
-                            x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
-                        ) {
+        if (programState == STATE_PLACE_PIECES) {
+            switch (event) {
+                //-- Left Button Down
+                case cv::EVENT_LBUTTONDOWN: {
+                    // std::cout << selected.flag << std::endl;
+                    // std::cout << "Needed " << SELECT_NONE << " or " << SELECT_PICK << std::endl;
+                    if (section == SEC_PIECES) {
+                        for (int i = 0; i < board.piecesImages.size(); i++) {
                             if (
-                                y >= board.piecesImages.at(i).y
+                                x >= board.piecesImages.at(i).x
                                 &&
-                                y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                            ) {
-                                std::cout << TAB SUCCESS "Piece (" << board.piecesImages.at(i).name << ", " << board.piecesImages.at(i).color << ") Selected" << ENDL;
-                                cv::Mat tmp;
-                                board.window.copyTo(tmp);
-                                cv::rectangle(
-                                    tmp,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x,
-                                        board.piecesImages.at(i).y
-                                    ),
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                    ),
-                                    cv::Scalar(0, 100, 0),
-                                    4,
-                                    cv::LINE_AA,
-                                    0
-                                );
-                                cv::rectangle(
-                                    tmp,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x - 2,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                    ),
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size + 2,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
-                                    ),
-                                    cv::Scalar(0, 100, 0),
-                                    -1,
-                                    cv::LINE_AA,
-                                    0
-                                );
-                                cv::putText(
-                                    tmp,
-                                    board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + 10,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
-                                    ),
-                                    cv::FONT_HERSHEY_SIMPLEX,
-                                    0.7,
-                                    cv::Scalar(0, 255, 0),
-                                    2
-                                );
-                                selected.flag = SELECT_PICK;
-                                selected.x = board.piecesImages.at(i).x;
-                                selected.y = board.piecesImages.at(i).y;
-                                selected.size = board.piecesImages.at(i).size;
-                                selected.id = i;
-                                cv::imshow("Chess Board", tmp);
-                                break;
-                            }
-                        }
-                    }
-                    picked_up = true;
-                } else if (section == SEC_GAME) {
-                    if (picked_up == true) {
-                        if (tobePlaced.flag == HOME_EMPTY) {
-                            cv::Mat tmp, fadePiece;
-                            tempMat1.copyTo(tmp);
-                            board.piecesImages.at(selected.id).image.copyTo(pieceImage);
-                            pieceImage.copyTo(fadePiece);
-                            int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
-                            int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                            cv::resize(fadePiece, fadePiece, cv::Size(
-                                placedWidth,
-                                placedHeight
-                            ), cv::INTER_LINEAR);
-                            int r, g, b;
-                            cv::Vec3b pixel;
-                            for (int i = 0; i < fadePiece.cols; i++) {
-                                for (int j = 0; j < fadePiece.rows; j++) {
-                                    pixel = fadePiece.at<cv::Vec3b>(i, j);
-                                    r = static_cast<int>(pixel[0]);
-                                    g = static_cast<int>(pixel[1]);
-                                    b = static_cast<int>(pixel[2]);
-                                    if (
-                                        (r < 95 || r > 105) &&
-                                        (g < 95 || g > 105) &&
-                                        (b < 95 || b > 105)
-                                    ){
-                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[0] = int(int(b));
-                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[1] = int(int(g));
-                                        tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[2] = int(int(r));
-                                    }
-                                }
-                            }
-                            tobePlaced.flag = HOME_NOT_EMPTY;
-                            home.at(tobePlaced.id).isFileld = HOME_NOT_EMPTY;
-                            Piece tmpPiece;
-                            tmp.copyTo(board.window);
-                            std::cout << TAB SUCCESS "Piece has been Placed" ENDL;
-                            tmpPiece.setHome(home.at(tobePlaced.id).id);
-                            tmpPiece.setColor(board.piecesImages.at(selected.id).colorID);
-                            tmpPiece.setID(board.piecesImages.at(selected.id).nameID);
-                            pieces.push_back(tmpPiece);
-                        } else {
-                            std::cout << TAB FAILED "Can Not Place Piece" ENDL;
-                        }
-                    }
-                }
-                break;
-            };
-            //-- Left Button Up
-            case cv::EVENT_LBUTTONUP: {
-                // if (selected.flag = SELECT_PICK) {
-                    selected.flag = SELECT_MOVE;
-                    cv::Mat tmp;
-                    board.window.copyTo(tmp);
-                    cv::rectangle(
-                        tmp,
-                        cv::Point(
-                            selected.x,
-                            selected.y
-                        ),
-                        cv::Point(
-                            selected.x + selected.size,
-                            selected.y + selected.size
-                        ),
-                        cv::Scalar(0, 255, 255),
-                        2,
-                        cv::LINE_AA,
-                        0
-                    );
-                    cv::imshow("Chess Board", tmp);
-                    tmp.copyTo(tempMat1);
-                    break;
-                // }
-            };
-            //-- Mouse Hover
-            case cv::EVENT_MOUSEMOVE: {
-                if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) { // Blue Hover Box
-                    for (int i = 0; i < board.piecesImages.size(); i++) {
-                        if (
-                            x >= board.piecesImages.at(i).x
-                            &&
-                            x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
-                        ) {
-                            if (
-                                y >= board.piecesImages.at(i).y
-                                &&
-                                y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                            ) {
-                                cv::Mat tmp;
-                                board.window.copyTo(tmp);
-                                cv::rectangle(
-                                    tmp,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x,
-                                        board.piecesImages.at(i).y
-                                    ),
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                    ),
-                                    cv::Scalar(100, 100, 0),
-                                    4,
-                                    cv::LINE_AA,
-                                    0
-                                );
-                                cv::rectangle(
-                                    tmp,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x - 2,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size
-                                    ),
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + board.piecesImages.at(i).size + 2,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
-                                    ),
-                                    cv::Scalar(100, 100, 0),
-                                    -1,
-                                    cv::LINE_AA,
-                                    0
-                                );
-                                cv::putText(
-                                    tmp,
-                                    board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
-                                    cv::Point(
-                                        board.piecesImages.at(i).x + 10,
-                                        board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
-                                    ),
-                                    cv::FONT_HERSHEY_SIMPLEX,
-                                    0.7,
-                                    cv::Scalar(255, 255, 0),
-                                    2
-                                );
-                                cv::imshow("Chess Board", tmp);
-                                break;
-                            }
-                        }
-                    }
-                } else if (selected.flag == SELECT_MOVE) { // Moving Piece on Blue Box
-                    cv::Mat tmp, fadePiece;
-                    tempMat1.copyTo(tmp);
-                    board.piecesImages.at(selected.id).image.copyTo(pieceImage);
-                    pieceImage.copyTo(fadePiece);
-                    // std::cout << "debug" << std::endl;
-                    int resizeWidth = pieceImage.cols * PIECE_PICK_SIZE;
-                    int resizeHeight = pieceImage.cols * PIECE_PICK_SIZE;
-                    int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
-                    int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
-                    int widthPadding = (home.at(0).size - placedWidth) / 2;
-                    int heightPadding = (home.at(0).size - placedHeight) / 2;
-                    cv::resize(pieceImage, pieceImage, cv::Size(
-                        resizeWidth,
-                        resizeHeight
-                    ), cv::INTER_LINEAR);
-                    cv::resize(fadePiece, fadePiece, cv::Size(
-                        placedWidth,
-                        placedHeight
-                    ), cv::INTER_LINEAR);
-                    int r, g, b;
-                    cv::Vec3b pixel;
-                    //-- Check if is Placeable on Chess Home or Not
-                    if (section == SEC_GAME) {
-                        for (int h = 0; h < home.size(); h++) {
-                            if (
-                                x >= home.at(h).x &&
-                                x < home.at(h).x + home.at(h).size
+                                x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
                             ) {
                                 if (
-                                    y >= home.at(h).y &&
-                                    y < home.at(h).y + home.at(h).size
+                                    y >= board.piecesImages.at(i).y
+                                    &&
+                                    y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
                                 ) {
-                                    cv::Scalar color;
-                                    std::string status;
-                                    if (home.at(h).isFileld == HOME_NOT_EMPTY) { // Piece Can Not be Placed
-                                        color = cv::Scalar(0, 0, 255);
-                                        status = "Can Not Place";
-                                    } else if (home.at(h).isFileld == HOME_EMPTY) { // Piece Can be Placed
-                                        color = cv::Scalar(0, 255, 0);
-                                        status = "Ready to Place";
-                                    } else { // Chess Board Home Status Unknown
-                                        color = cv::Scalar(0, 255, 255);
-                                    }
+                                    std::cout << TAB SUCCESS "Piece (" << board.piecesImages.at(i).name << ", " << board.piecesImages.at(i).color << ") Selected" << ENDL;
+                                    cv::Mat tmp;
+                                    board.window.copyTo(tmp);
                                     cv::rectangle(
                                         tmp,
                                         cv::Point(
-                                            home.at(h).x,
-                                            home.at(h).y 
+                                            board.piecesImages.at(i).x,
+                                            board.piecesImages.at(i).y
                                         ),
                                         cv::Point(
-                                            home.at(h).x + home.at(h).size,
-                                            home.at(h).y + home.at(h).size
+                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
                                         ),
-                                        color,
-                                        2,
+                                        cv::Scalar(0, 100, 0),
+                                        4,
                                         cv::LINE_AA,
                                         0
                                     );
-                                    cv::Rect pos;
-                                    cv::Point textPos;
-                                    if (y <= board.size * 7 / 8) {
-                                        pos = cv::Rect(
-                                            cv::Point(
-                                                home.at(h).x - 1,
-                                                home.at(h).y + home.at(h).size
-                                            ),
-                                            cv::Point(
-                                                home.at(h).x + home.at(h).size + 2,
-                                                home.at(h).y + home.at(h).size + 40
-                                            )
-                                        );
-                                        textPos = cv::Point(
-                                            home.at(h).x + 6,
-                                            home.at(h).y + home.at(h).size + 25
-                                        );
-                                    } else {
-                                        pos = cv::Rect(
-                                            cv::Point(
-                                                home.at(h).x - 1,
-                                                home.at(h).y
-                                            ),
-                                            cv::Point(
-                                                home.at(h).x + home.at(h).size + 2,
-                                                home.at(h).y - 40
-                                            )
-                                        );
-                                        textPos = cv::Point(
-                                            home.at(h).x + 6,
-                                            home.at(h).y - 13
-                                        );
-                                    }
                                     cv::rectangle(
                                         tmp,
-                                        pos,
-                                        color,
+                                        cv::Point(
+                                            board.piecesImages.at(i).x - 2,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                        ),
+                                        cv::Point(
+                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size + 2,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
+                                        ),
+                                        cv::Scalar(0, 100, 0),
                                         -1,
                                         cv::LINE_AA,
                                         0
                                     );
                                     cv::putText(
                                         tmp,
-                                        status,
-                                        textPos,
+                                        board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
+                                        cv::Point(
+                                            board.piecesImages.at(i).x + 10,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
+                                        ),
                                         cv::FONT_HERSHEY_SIMPLEX,
                                         0.7,
-                                        cv::Scalar(0, 0, 0),
+                                        cv::Scalar(0, 255, 0),
                                         2
                                     );
-                                    tobePlaced.x = home.at(h).x + widthPadding;
-                                    tobePlaced.y = home.at(h).y + heightPadding;
-                                    tobePlaced.size = fadePiece.cols;
-                                    tobePlaced.index = h + 1;
-                                    tobePlaced.id = h;
-                                    //-- Preload Image Inside Chess Home
-                                    if (home.at(h).isFileld == HOME_EMPTY) {
-                                        tobePlaced.flag = HOME_EMPTY;
-                                        for (int i = 0; i < fadePiece.cols; i++) {
-                                            for (int j = 0; j < fadePiece.rows; j++) {
-                                                pixel = fadePiece.at<cv::Vec3b>(i, j);
-                                                r = static_cast<int>(pixel[0]);
-                                                g = static_cast<int>(pixel[1]);
-                                                b = static_cast<int>(pixel[2]);
-                                                if (
-                                                    (r < 95 || r > 105) &&
-                                                    (g < 95 || g > 105) &&
-                                                    (b < 95 || b > 105)
-                                                ){
-                                                    tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[0] = int(int(b) / 2);
-                                                    tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[1] = int(int(g) / 2);
-                                                    tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[2] = int(int(r) / 2);
+                                    selected.flag = SELECT_PICK;
+                                    selected.x = board.piecesImages.at(i).x;
+                                    selected.y = board.piecesImages.at(i).y;
+                                    selected.size = board.piecesImages.at(i).size;
+                                    selected.id = i;
+                                    cv::imshow("Chess Board", tmp);
+                                    break;
+                                }
+                            }
+                        }
+                        picked_up = true;
+                    } else if (section == SEC_GAME) {
+                        if (picked_up == true) {
+                            if (tobePlaced.flag == HOME_EMPTY) {
+                                cv::Mat tmp, fadePiece;
+                                tempMat1.copyTo(tmp);
+                                board.piecesImages.at(selected.id).image.copyTo(pieceImage);
+                                pieceImage.copyTo(fadePiece);
+                                int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
+                                int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
+                                cv::resize(fadePiece, fadePiece, cv::Size(
+                                    placedWidth,
+                                    placedHeight
+                                ), cv::INTER_LINEAR);
+                                int r, g, b;
+                                cv::Vec3b pixel;
+                                for (int i = 0; i < fadePiece.cols; i++) {
+                                    for (int j = 0; j < fadePiece.rows; j++) {
+                                        pixel = fadePiece.at<cv::Vec3b>(i, j);
+                                        r = static_cast<int>(pixel[0]);
+                                        g = static_cast<int>(pixel[1]);
+                                        b = static_cast<int>(pixel[2]);
+                                        if (
+                                            (r < 95 || r > 105) &&
+                                            (g < 95 || g > 105) &&
+                                            (b < 95 || b > 105)
+                                        ){
+                                            tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[0] = int(int(b));
+                                            tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[1] = int(int(g));
+                                            tmp.at<cv::Vec3b>(tobePlaced.y + i, tobePlaced.x + j)[2] = int(int(r));
+                                        }
+                                    }
+                                }
+                                tobePlaced.flag = HOME_NOT_EMPTY;
+                                home.at(tobePlaced.id).isFileld = HOME_NOT_EMPTY;
+                                Piece tmpPiece;
+                                tmp.copyTo(board.window);
+                                std::cout << TAB SUCCESS "Piece has been Placed" ENDL;
+                                tmpPiece.setHome(home.at(tobePlaced.id).id);
+                                tmpPiece.setColor(board.piecesImages.at(selected.id).colorID);
+                                tmpPiece.setID(board.piecesImages.at(selected.id).nameID);
+                                pieces.push_back(tmpPiece);
+                            } else {
+                                std::cout << TAB FAILED "Can Not Place Piece" ENDL;
+                            }
+                        }
+                    }
+                    break;
+                };
+                //-- Left Button Up
+                case cv::EVENT_LBUTTONUP: {
+                    // if (selected.flag = SELECT_PICK) {
+                        selected.flag = SELECT_MOVE;
+                        cv::Mat tmp;
+                        board.window.copyTo(tmp);
+                        cv::rectangle(
+                            tmp,
+                            cv::Point(
+                                selected.x,
+                                selected.y
+                            ),
+                            cv::Point(
+                                selected.x + selected.size,
+                                selected.y + selected.size
+                            ),
+                            cv::Scalar(0, 255, 255),
+                            2,
+                            cv::LINE_AA,
+                            0
+                        );
+                        cv::imshow("Chess Board", tmp);
+                        tmp.copyTo(tempMat1);
+                        break;
+                    // }
+                };
+                //-- Mouse Hover
+                case cv::EVENT_MOUSEMOVE: {
+                    if (selected.flag == SELECT_PUT || selected.flag == SELECT_NONE) { // Blue Hover Box
+                        for (int i = 0; i < board.piecesImages.size(); i++) {
+                            if (
+                                x >= board.piecesImages.at(i).x
+                                &&
+                                x < board.piecesImages.at(i).x + board.piecesImages.at(i).size
+                            ) {
+                                if (
+                                    y >= board.piecesImages.at(i).y
+                                    &&
+                                    y < board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                ) {
+                                    cv::Mat tmp;
+                                    board.window.copyTo(tmp);
+                                    cv::rectangle(
+                                        tmp,
+                                        cv::Point(
+                                            board.piecesImages.at(i).x,
+                                            board.piecesImages.at(i).y
+                                        ),
+                                        cv::Point(
+                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                        ),
+                                        cv::Scalar(100, 100, 0),
+                                        4,
+                                        cv::LINE_AA,
+                                        0
+                                    );
+                                    cv::rectangle(
+                                        tmp,
+                                        cv::Point(
+                                            board.piecesImages.at(i).x - 2,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size
+                                        ),
+                                        cv::Point(
+                                            board.piecesImages.at(i).x + board.piecesImages.at(i).size + 2,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 40
+                                        ),
+                                        cv::Scalar(100, 100, 0),
+                                        -1,
+                                        cv::LINE_AA,
+                                        0
+                                    );
+                                    cv::putText(
+                                        tmp,
+                                        board.piecesImages.at(i).color + " " + board.piecesImages.at(i).name,
+                                        cv::Point(
+                                            board.piecesImages.at(i).x + 10,
+                                            board.piecesImages.at(i).y + board.piecesImages.at(i).size + 25
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+                                        0.7,
+                                        cv::Scalar(255, 255, 0),
+                                        2
+                                    );
+                                    cv::imshow("Chess Board", tmp);
+                                    break;
+                                }
+                            }
+                        }
+                    } else if (selected.flag == SELECT_MOVE) { // Moving Piece on Blue Box
+                        cv::Mat tmp, fadePiece;
+                        tempMat1.copyTo(tmp);
+                        board.piecesImages.at(selected.id).image.copyTo(pieceImage);
+                        pieceImage.copyTo(fadePiece);
+                        // std::cout << "debug" << std::endl;
+                        int resizeWidth = pieceImage.cols * PIECE_PICK_SIZE;
+                        int resizeHeight = pieceImage.cols * PIECE_PICK_SIZE;
+                        int placedWidth = home.at(0).size * PIECE_PLACE_SIZE;
+                        int placedHeight = home.at(0).size * PIECE_PLACE_SIZE;
+                        int widthPadding = (home.at(0).size - placedWidth) / 2;
+                        int heightPadding = (home.at(0).size - placedHeight) / 2;
+                        cv::resize(pieceImage, pieceImage, cv::Size(
+                            resizeWidth,
+                            resizeHeight
+                        ), cv::INTER_LINEAR);
+                        cv::resize(fadePiece, fadePiece, cv::Size(
+                            placedWidth,
+                            placedHeight
+                        ), cv::INTER_LINEAR);
+                        int r, g, b;
+                        cv::Vec3b pixel;
+                        //-- Check if is Placeable on Chess Home or Not
+                        if (section == SEC_GAME) {
+                            for (int h = 0; h < home.size(); h++) {
+                                if (
+                                    x >= home.at(h).x &&
+                                    x < home.at(h).x + home.at(h).size
+                                ) {
+                                    if (
+                                        y >= home.at(h).y &&
+                                        y < home.at(h).y + home.at(h).size
+                                    ) {
+                                        cv::Scalar color;
+                                        std::string status;
+                                        if (home.at(h).isFileld == HOME_NOT_EMPTY) { // Piece Can Not be Placed
+                                            color = cv::Scalar(0, 0, 255);
+                                            status = "Can Not Place";
+                                        } else if (home.at(h).isFileld == HOME_EMPTY) { // Piece Can be Placed
+                                            color = cv::Scalar(0, 255, 0);
+                                            status = "Ready to Place";
+                                        } else { // Chess Board Home Status Unknown
+                                            color = cv::Scalar(0, 255, 255);
+                                        }
+                                        cv::rectangle(
+                                            tmp,
+                                            cv::Point(
+                                                home.at(h).x,
+                                                home.at(h).y 
+                                            ),
+                                            cv::Point(
+                                                home.at(h).x + home.at(h).size,
+                                                home.at(h).y + home.at(h).size
+                                            ),
+                                            color,
+                                            2,
+                                            cv::LINE_AA,
+                                            0
+                                        );
+                                        cv::Rect pos;
+                                        cv::Point textPos;
+                                        if (y <= board.size * 7 / 8) {
+                                            pos = cv::Rect(
+                                                cv::Point(
+                                                    home.at(h).x - 1,
+                                                    home.at(h).y + home.at(h).size
+                                                ),
+                                                cv::Point(
+                                                    home.at(h).x + home.at(h).size + 2,
+                                                    home.at(h).y + home.at(h).size + 40
+                                                )
+                                            );
+                                            textPos = cv::Point(
+                                                home.at(h).x + 6,
+                                                home.at(h).y + home.at(h).size + 25
+                                            );
+                                        } else {
+                                            pos = cv::Rect(
+                                                cv::Point(
+                                                    home.at(h).x - 1,
+                                                    home.at(h).y
+                                                ),
+                                                cv::Point(
+                                                    home.at(h).x + home.at(h).size + 2,
+                                                    home.at(h).y - 40
+                                                )
+                                            );
+                                            textPos = cv::Point(
+                                                home.at(h).x + 6,
+                                                home.at(h).y - 13
+                                            );
+                                        }
+                                        cv::rectangle(
+                                            tmp,
+                                            pos,
+                                            color,
+                                            -1,
+                                            cv::LINE_AA,
+                                            0
+                                        );
+                                        cv::putText(
+                                            tmp,
+                                            status,
+                                            textPos,
+                                            cv::FONT_HERSHEY_SIMPLEX,
+                                            0.7,
+                                            cv::Scalar(0, 0, 0),
+                                            2
+                                        );
+                                        tobePlaced.x = home.at(h).x + widthPadding;
+                                        tobePlaced.y = home.at(h).y + heightPadding;
+                                        tobePlaced.size = fadePiece.cols;
+                                        tobePlaced.index = h + 1;
+                                        tobePlaced.id = h;
+                                        //-- Preload Image Inside Chess Home
+                                        if (home.at(h).isFileld == HOME_EMPTY) {
+                                            tobePlaced.flag = HOME_EMPTY;
+                                            for (int i = 0; i < fadePiece.cols; i++) {
+                                                for (int j = 0; j < fadePiece.rows; j++) {
+                                                    pixel = fadePiece.at<cv::Vec3b>(i, j);
+                                                    r = static_cast<int>(pixel[0]);
+                                                    g = static_cast<int>(pixel[1]);
+                                                    b = static_cast<int>(pixel[2]);
+                                                    if (
+                                                        (r < 95 || r > 105) &&
+                                                        (g < 95 || g > 105) &&
+                                                        (b < 95 || b > 105)
+                                                    ){
+                                                        tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[0] = int(int(b) / 2);
+                                                        tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[1] = int(int(g) / 2);
+                                                        tmp.at<cv::Vec3b>(widthPadding + home.at(h).y + i, heightPadding + home.at(h).x + j)[2] = int(int(r) / 2);
+                                                    }
                                                 }
                                             }
+                                        } else {
+                                            tobePlaced.flag = HOME_NOT_EMPTY;
                                         }
-                                    } else {
-                                        tobePlaced.flag = HOME_NOT_EMPTY;
                                     }
                                 }
                             }
                         }
-                    }
-                    //-- Load Image Inside Box
-                    for (int i = 0; i < pieceImage.cols; i++) {
-                        for (int j = 0; j < pieceImage.rows; j++) {
-                            pixel = pieceImage.at<cv::Vec3b>(i, j);
-                            r = static_cast<int>(pixel[0]);
-                            g = static_cast<int>(pixel[1]);
-                            b = static_cast<int>(pixel[2]);
-                            if (
-                                (r < 95 || r > 105) &&
-                                (g < 95 || g > 105) &&
-                                (b < 95 || b > 105)
-                            ){
-                                // if (
-                                //     y + i - resizeWidth / 2 <= board.size  &&
-                                //     x + j - resizeHeight / 2 <= board.size  &&
-                                //     y + i - resizeWidth / 2 > 0 &&
-                                //     x + j - resizeHeight / 2 > 0
-                                // ) {
-                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[0] = int(b);
-                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[1] = int(g);
-                                tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[2] = int(r);
-                                // }
+                        //-- Load Image Inside Box
+                        for (int i = 0; i < pieceImage.cols; i++) {
+                            for (int j = 0; j < pieceImage.rows; j++) {
+                                pixel = pieceImage.at<cv::Vec3b>(i, j);
+                                r = static_cast<int>(pixel[0]);
+                                g = static_cast<int>(pixel[1]);
+                                b = static_cast<int>(pixel[2]);
+                                if (
+                                    (r < 95 || r > 105) &&
+                                    (g < 95 || g > 105) &&
+                                    (b < 95 || b > 105)
+                                ){
+                                    if (
+                                        y + i - resizeWidth / 2 < board.size &&
+                                        x + j - resizeHeight / 2 < board.size * (1 + PANEL_WIDTH_SCALE) &&
+                                        y + i - resizeWidth / 2 > 0 &&
+                                        x + j - resizeHeight / 2 > 0
+                                    ) {
+                                    tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[0] = int(b);
+                                    tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[1] = int(g);
+                                    tmp.at<cv::Vec3b>(y + i - resizeWidth / 2 , x + j - resizeHeight / 2)[2] = int(r);
+                                    }
+                                }
                             }
                         }
+                        cv::rectangle(
+                            tmp,
+                            cv::Point(
+                                x + 60,
+                                y + 60
+                            ),
+                            cv::Point(
+                                x - 60,
+                                y - 60
+                            ),
+                            cv::Scalar(100, 100, 0),
+                            4,
+                            cv::LINE_AA,
+                            0
+                        );
+                        cv::rectangle(
+                            tmp,
+                            cv::Point(
+                                x + 62,
+                                y + 60
+                            ),
+                            cv::Point(
+                                x - 62,
+                                y + 100
+                            ),
+                            cv::Scalar(100, 100, 0),
+                            -1,
+                            cv::LINE_AA,
+                            0
+                        );
+                        cv::putText(
+                            tmp,
+                            board.piecesImages.at(selected.id).color + " " + board.piecesImages.at(selected.id).name,
+                            cv::Point(
+                                x - 55,
+                                y + 85
+                            ),
+                            cv::FONT_HERSHEY_SIMPLEX,
+                            0.6,
+                            cv::Scalar(255, 255, 0),
+                            2
+                        );
+                        // cv::imshow("Selected", pieceImage);
+                        cv::imshow("Chess Board", tmp);
                     }
-                    cv::rectangle(
-                        tmp,
-                        cv::Point(
-                            x + 60,
-                            y + 60
-                        ),
-                        cv::Point(
-                            x - 60,
-                            y - 60
-                        ),
-                        cv::Scalar(100, 100, 0),
-                        4,
-                        cv::LINE_AA,
-                        0
-                    );
-                    cv::rectangle(
-                        tmp,
-                        cv::Point(
-                            x + 62,
-                            y + 60
-                        ),
-                        cv::Point(
-                            x - 62,
-                            y + 100
-                        ),
-                        cv::Scalar(100, 100, 0),
-                        -1,
-                        cv::LINE_AA,
-                        0
-                    );
-                    cv::putText(
-                        tmp,
-                        board.piecesImages.at(selected.id).color + " " + board.piecesImages.at(selected.id).name,
-                        cv::Point(
-                            x - 55,
-                            y + 85
-                        ),
-                        cv::FONT_HERSHEY_SIMPLEX,
-                        0.6,
-                        cv::Scalar(255, 255, 0),
-                        2
-                    );
-                    // cv::imshow("Selected", pieceImage);
-                    cv::imshow("Chess Board", tmp);
+                    if (x > board.size) {
+                        if (section == SEC_GAME) {
+                            std::cout << LOG "Choose Piece" ENDL;
+                        }
+                        section = SEC_PIECES;
+                    } else {
+                        if (section == SEC_PIECES) {
+                            std::cout << LOG "Select and Move Piece" ENDL;
+                        }
+                        section = SEC_GAME;
+                    }
+                    break;
                 }
-                if (x > board.size) {
-                    if (section == SEC_GAME) {
-                        std::cout << LOG "Choose Piece" ENDL;
-                    }
-                    section = SEC_PIECES;
-                } else {
-                    if (section == SEC_PIECES) {
-                        std::cout << LOG "Select and Move Piece" ENDL;
-                    }
-                    section = SEC_GAME;
-                }
-                break;
-            }
-        };
+            };
+        }
     }
     //-- Generate Chess Board
     void Chess::generateChessBoard() {
@@ -811,7 +782,7 @@
             cv::imshow("Chess Board", board.window);
             cv::Mat chessboard;
             board.window.copyTo(chessboard);
-            int panel_width = board.size * 0.313;
+            int panel_width = board.size * PANEL_WIDTH_SCALE;
             int addition = 2;
             //-- Resize Chess Board to Add Panel Width
             while (true) {
@@ -1084,43 +1055,46 @@
     }
     //-- Method to Check Moves of Pieces on Board
     void Chess::checkMoves() {
-        int pieceCount = pieces.size();
-        if (pieceCount == 1) {
-            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Piece" << ENDL;
-        } else {
-            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
-        }
-        for (int i = 0; i < pieces.size(); i++) {
-            PieceInfo tmp = pieces.at(i).getInfo();
-            std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
-            std::vector<int> moves = pieces.at(i).getMoveHomes();
-            cv::Mat tmpMat;
-            board.window.copyTo(tmpMat);
-            for (int j = 0; j < moves.size(); j++) {
-                // std::cout << "wow" << std::endl;
-                for (int h = 0; h < home.size(); h++) {
-                    if (home.at(h).id == tmp.home) {
-                        cv::rectangle(
-                            tmpMat,
-                            cv::Point(
-                                home.at(moves.at(j)).x,
-                                home.at(moves.at(j)).y
-                            ),
-                            cv::Point(
-                                home.at(moves.at(j)).x + home.at(moves.at(j)).size,
-                                home.at(moves.at(j)).y + home.at(moves.at(j)).size
-                            ),
-                            cv::Scalar(
-                                255, 255, 0
-                            ),
-                            4, 8, 0
-                        );
-                    }
-                }
-                cv::imshow("Chess Board", tmpMat);
-                cv::waitKey(100);
-            }
-        }
+        programState = STATE_CHECK_CHECKMATE;
+        cv::imshow("Chess Board2", board.window);
+        cv::waitKey(0);
+        // int pieceCount = pieces.size();
+        // if (pieceCount == 1) {
+        //     std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Piece" << ENDL;
+        // } else {
+        //     std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
+        // }
+        // for (int i = 0; i < pieces.size(); i++) {
+        //     PieceInfo tmp = pieces.at(i).getInfo();
+        //     std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
+        //     std::vector<int> moves = pieces.at(i).getMoveHomes();
+        //     cv::Mat tmpMat;
+        //     board.window.copyTo(tmpMat);
+        //     for (int j = 0; j < moves.size(); j++) {
+        //         // std::cout << "wow" << std::endl;
+        //         for (int h = 0; h < home.size(); h++) {
+        //             if (home.at(h).id == tmp.home) {
+        //                 cv::rectangle(
+        //                     tmpMat,
+        //                     cv::Point(
+        //                         home.at(moves.at(j)).x,
+        //                         home.at(moves.at(j)).y
+        //                     ),
+        //                     cv::Point(
+        //                         home.at(moves.at(j)).x + home.at(moves.at(j)).size,
+        //                         home.at(moves.at(j)).y + home.at(moves.at(j)).size
+        //                     ),
+        //                     cv::Scalar(
+        //                         255, 255, 0
+        //                     ),
+        //                     4, 8, 0
+        //                 );
+        //             }
+        //         }
+        //         cv::imshow("Chess Board", tmpMat);
+        //         cv::waitKey(100);
+        //     }
+        // }
     }
     //-- Start Animation
     void Chess::startAnimation() {
@@ -1177,17 +1151,17 @@
         }
         cv::Size textSize = cv::getTextSize("by Ramtin Kosari", cv::FONT_HERSHEY_COMPLEX, 2, 1, nullptr);
         cv::Point textPosition(board.size / 2 - textSize.width / 2, board.size / 2 + textSize.height / 2);
-        cv::Size textSize2 = cv::getTextSize("RK OpenCV Graphics Support", cv::FONT_HERSHEY_COMPLEX, 1, 1, nullptr);
+        cv::Size textSize2 = cv::getTextSize("AI Course Project of Dr. Babak Karasfi", cv::FONT_HERSHEY_COMPLEX, 1, 1, nullptr);
         cv::Point textPosition2(board.size / 2 - textSize2.width / 2, board.size / 2 + textSize2.height / 2 + 100);
         for (int i = 0; i < 255 * 3; i++) {
             // output.copyTo(tmp);
             cv::putText(board.window, "By Ramtin Kosari", textPosition, cv::FONT_HERSHEY_COMPLEX, 2, cv::Scalar(i / 4 + 20, i / 4 + 20, i / 4));
             if (i < 255) {
-                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(i, i, 0));
+                cv::putText(board.window, "AI Course Project of Dr. Babak Karasfi", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(i, i, 0));
             } else if (i >= 255 * 2) {
-                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255 - (i - 255 * 2), 255 - (i - 255 * 2), 0));
+                cv::putText(board.window, "AI Course Project of Dr. Babak Karasfi", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255 - (i - 255 * 2), 255 - (i - 255 * 2), 0));
             } else {
-                cv::putText(board.window, "Graphics Has been Enabled", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255, 255, 0));
+                cv::putText(board.window, "AI Course Project of Dr. Babak Karasfi", textPosition2, cv::FONT_HERSHEY_COMPLEX, 1, cv::Scalar(255, 255, 0));
             }
             cv::imshow("Chess Board", board.window);
             cv::waitKey(5);
@@ -1217,6 +1191,7 @@
                         if (cv::waitKey(0) == int('c')) {
                             if (cv::waitKey(0) == int('k')) {
                                 std::cout << TAB SUCCESS "Checking Checkmate States ..." ENDL;
+                                chess.checkMoves();
                             } else {
                                 continue;
                             }
@@ -1233,7 +1208,6 @@
                 continue;
             }
         }
-        cv::waitKey(0);
         cv::destroyAllWindows();
         return 0;
     }

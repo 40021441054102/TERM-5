@@ -30,6 +30,7 @@
     # define SPEED 2
     # define PIECE_PICK_SIZE 0.85
     # define PIECE_PLACE_SIZE 0.8
+    # define PANEL_WIDTH_SCALE 0.313
     //-- Program States
     enum ProgramStates {
         STATE_PLACE_PIECES,
