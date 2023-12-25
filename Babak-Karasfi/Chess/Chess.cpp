@@ -80,36 +80,48 @@
                 break;
             }
             case CHESS_KNIGHT: {
-                if (home % 8 != 0) {
-                    if (home > 16) {
-                        moveHomes.push_back(home - 17);
+                //-- Left
+                if (home > 16) {
+                    //-- Lower
+                    if (home % 8 != 1) {
+                        moveHomes.push_back(home - 16 - 1 - 1);
                     }
-                    if (home < 49) {
-                        moveHomes.push_back(home + 15);
-                    }
-                }
-                if (home % 8 != 1) {
-                    if (home > 15) {
-                        moveHomes.push_back(home - 15);
-                    }
-                    if (home < 48) {
-                        moveHomes.push_back(home + 17);
+                    //-- Upper
+                    if (home % 8 != 0) {
+                        moveHomes.push_back(home - 16 + 1 - 1);
                     }
                 }
-                if (home % 8 != 0 && home % 8 != 1) {
-                    if (home > 7) {
-                        moveHomes.push_back(home - 10);
+                //-- Right
+                if (home < 49) {
+                    //-- Lower
+                    if (home % 8 != 1) {
+                        moveHomes.push_back(home + 16 - 1 - 1);
                     }
-                    if (home < 56) {
-                        moveHomes.push_back(home + 10);
+                    //-- Upper
+                    if (home % 8 != 0) {
+                        moveHomes.push_back(home + 16 + 1 - 1);
                     }
                 }
-                if (home % 8 != 0 && home % 8 != 1 && home % 8 != 2) {
-                    if (home > 6) {
-                        moveHomes.push_back(home - 6);
+                //-- Up
+                if (home % 8 != 0 && home % 8 != 7) {
+                    //-- Left
+                    if (home > 8) {
+                        moveHomes.push_back(home - 8 + 2 - 1);
                     }
-                    if (home < 55) {
-                        moveHomes.push_back(home + 6);
+                    //-- Right
+                    if (home < 57) {
+                        moveHomes.push_back(home + 8 + 2 - 1);
+                    }
+                }
+                //-- Down
+                if (home % 8 != 1 && home % 8 != 2) {
+                    //-- Left
+                    if (home > 8) {
+                        moveHomes.push_back(home - 8 - 2 - 1);
+                    }
+                    //-- Right
+                    if (home < 57) {
+                        moveHomes.push_back(home + 8 - 2 - 1);
                     }
                 }
                 break;
@@ -1233,7 +1245,8 @@
                     }
                 }
                 cv::imshow("Chess Board", tmpMat);
-                cv::waitKey(SPEED * 10);
+                // cv::waitKey(SPEED * 10);
+                cv::waitKey(0);
                 board.window.copySize(tmpMat);
             }
             board.window.copyTo(tmpMat);
