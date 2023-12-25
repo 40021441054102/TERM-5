@@ -206,60 +206,76 @@
             }
             case CHESS_QUEEN: {
                 int tmpHome = home;
-                while (tmpHome % 8 != 0 && tmpHome > 8) {
-                    tmpHome -= 9;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
-                    }
-                }
-                tmpHome = home;
-                while (tmpHome % 8 != 1 && tmpHome > 8) {
-                    tmpHome -= 7;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
-                    }
-                }
-                tmpHome = home;
-                while (tmpHome % 8 != 0 && tmpHome < 57) {
-                    tmpHome += 7;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
-                    }
-                }
-                tmpHome = home;
-                while (tmpHome % 8 != 1 && tmpHome < 57) {
+                //-- Up Right
+                for (int i = 0; i < 8; i++) {
                     tmpHome += 9;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                    if (tmpHome % 8 == 1 || tmpHome > 64) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
+                }
+                //-- Down Right
+                tmpHome = home;
+                for (int i = 0; i < 8; i++) {
+                    tmpHome += 7;
+                    if (tmpHome % 8 == 0 || tmpHome > 64) {
+                        break;
+                    }
+                    moveHomes.push_back(tmpHome - 1);
+                }
+                //-- Up Left
+                tmpHome = home;
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 7;
+                    if (tmpHome % 8 == 1 || tmpHome < 1) {
+                        break;
+                    }
+                    moveHomes.push_back(tmpHome - 1);
+                }
+                //-- Down Left
+                tmpHome = home;
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 9;
+                    if (tmpHome % 8 == 0 || tmpHome < 1) {
+                        break;
+                    }
+                    moveHomes.push_back(tmpHome - 1);
                 }
                 tmpHome = home;
-                while (tmpHome > 8) {
-                    tmpHome -= 8;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
-                    }
-                }
-                tmpHome = home;
-                while (tmpHome < 57) {
+                //-- Right
+                for (int i = 0; i < 8; i++) {
                     tmpHome += 8;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                    if (tmpHome > 64) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
                 }
+                //-- Left
                 tmpHome = home;
-                while (tmpHome % 8 != 0) {
-                    tmpHome -= 1;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 8;
+                    if (tmpHome < 1) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
                 }
+                //-- Up
                 tmpHome = home;
-                while (tmpHome % 8 != 1) {
+                for (int i = 0; i < 8; i++) {
                     tmpHome += 1;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                    if (tmpHome % 8 == 1) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
+                }
+                //-- Down
+                tmpHome = home;
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 1;
+                    if (tmpHome % 8 == 0) {
+                        break;
+                    }
+                    moveHomes.push_back(tmpHome - 1);
                 }
                 break;
             }
@@ -298,9 +314,6 @@
                 }
                 break;
             }
-        }
-        for (int i = 0; i < moveHomes.size(); i++) {
-            std::cout << WARNING INFO << moveHomes.at(i) << ENDL;
         }
     }
     //-- Method to Get Piece Move Homes
