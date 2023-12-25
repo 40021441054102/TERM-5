@@ -45,94 +45,217 @@
     }
     //-- Method to Find Piece Move Homes
     void Piece::findMoveHomes() {
+        //-- Clear Move Homes
+        moveHomes.resize(0);
+        //-- Find Move Homes
+        // home -= 1;
         switch (id) {
-            case CHESS_KING: {
-                switch (home) {
-                    //-- Handle Corner Homes
-                    case CHESS_A1: {
-                        moveHomes.push_back(home + 8);
-                        moveHomes.push_back(home + 1);
-                        moveHomes.push_back(home + 8 + 1);
-                        break;
-                    };
-                    case CHESS_A8: {
-                        moveHomes.push_back(home + 8);
-                        moveHomes.push_back(home - 1);
-                        moveHomes.push_back(home + 8 - 1);
-                        break;
-                    };
-                    case CHESS_H1: {
-                        moveHomes.push_back(home - 8);
-                        moveHomes.push_back(home + 1);
-                        moveHomes.push_back(home - 8 + 1);
-                        break;
-                    };
-                    case CHESS_H8: {
-                        moveHomes.push_back(home - 8);
-                        moveHomes.push_back(home - 1);
-                        moveHomes.push_back(home - 8 - 1);
-                        break;
-                    };
-                    default: { //-- This has Bug, It Must be Fixed
-                        for (int i = 0; i < 8; i++) {
-                            if (home == i * 8 + 8) { //-- Handle Top Edge
-                                moveHomes.push_back(home + 8);
-                                moveHomes.push_back(home + 8 - 1);
-                                moveHomes.push_back(home - 8);
-                                moveHomes.push_back(home - 8 - 1);
-                                moveHomes.push_back(home - 1);
-                            } else if (home == i * 8 + 1) { //-- Handle Buttom Edge
-                                moveHomes.push_back(home + 8);
-                                moveHomes.push_back(home + 8 + 1);
-                                moveHomes.push_back(home - 8);
-                                moveHomes.push_back(home - 8 + 1);
-                                moveHomes.push_back(home + 1);
-                            } else if (home == i + 1) { //-- Handle Left Edge
-                                moveHomes.push_back(home + 1);
-                                moveHomes.push_back(home + 1 + 8);
-                                moveHomes.push_back(home - 1);
-                                moveHomes.push_back(home - 1 + 8);
-                                moveHomes.push_back(home + 8);
-                            } else if (home == 56 + i + 1) { //-- Handle Right Edge
-                                moveHomes.push_back(home + 1);
-                                moveHomes.push_back(home + 1 - 8);
-                                moveHomes.push_back(home - 1);
-                                moveHomes.push_back(home - 1 - 8);
-                                moveHomes.push_back(home - 8);
-                            }
-                        }
-                        //-- Handle Inner Homes
-                        moveHomes.push_back(home + 1); //-- Top
-                        moveHomes.push_back(home + 1 + 8); //-- Top Right
-                        moveHomes.push_back(home + 1 - 8); //-- Top Left
-                        moveHomes.push_back(home + 8); //-- Right
-                        moveHomes.push_back(home - 8); //- Left
-                        moveHomes.push_back(home - 1 + 8); //-- Buttom Right
-                        moveHomes.push_back(home - 1 - 8); //-- Buttom Left
-                        moveHomes.push_back(home - 1); //-- Buttom
-                    }
-                };
-                break;
-            };
             case CHESS_PAWN: {
+                if (color == CHESS_DARK) {
+                    if (home > 8) {
+                        moveHomes.push_back(home - 8);
+                    }
+                } else if (color == CHESS_LIGHT) {
+                    if (home < 57) {
+                        moveHomes.push_back(home + 8);
+                    }
+                }
                 break;
-            };
-            case CHESS_QUEEN: {
-                break;
-            };
-            case CHESS_BISHOP: {
-                break;
-            };
-            case CHESS_CASTLE: {
-                break;
-            };
+            }
             case CHESS_KNIGHT: {
+                if (home % 8 != 0) {
+                    if (home > 16) {
+                        moveHomes.push_back(home - 17);
+                    }
+                    if (home < 49) {
+                        moveHomes.push_back(home + 15);
+                    }
+                }
+                if (home % 8 != 1) {
+                    if (home > 15) {
+                        moveHomes.push_back(home - 15);
+                    }
+                    if (home < 48) {
+                        moveHomes.push_back(home + 17);
+                    }
+                }
+                if (home % 8 != 0 && home % 8 != 1) {
+                    if (home > 7) {
+                        moveHomes.push_back(home - 10);
+                    }
+                    if (home < 56) {
+                        moveHomes.push_back(home + 10);
+                    }
+                }
+                if (home % 8 != 0 && home % 8 != 1 && home % 8 != 2) {
+                    if (home > 6) {
+                        moveHomes.push_back(home - 6);
+                    }
+                    if (home < 55) {
+                        moveHomes.push_back(home + 6);
+                    }
+                }
                 break;
-            };
-        };
-        //-- Print Result
+            }
+            case CHESS_BISHOP: {
+                int tmpHome = home;
+                while (tmpHome % 8 != 0 && tmpHome > 8) {
+                    tmpHome -= 9;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1 && tmpHome > 8) {
+                    tmpHome -= 7;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 0 && tmpHome < 57) {
+                    tmpHome += 7;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1 && tmpHome < 57) {
+                    tmpHome += 9;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                break;
+            }
+            case CHESS_CASTLE: {
+                int tmpHome = home;
+                while (tmpHome > 8) {
+                    tmpHome -= 8;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome < 57) {
+                    tmpHome += 8;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 0 && tmpHome > 1) {
+                    tmpHome -= 1;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1 && tmpHome < 64) {
+                    tmpHome += 1;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                break;
+            }
+            case CHESS_QUEEN: {
+                int tmpHome = home;
+                while (tmpHome % 8 != 0 && tmpHome > 8) {
+                    tmpHome -= 9;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1 && tmpHome > 8) {
+                    tmpHome -= 7;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 0 && tmpHome < 57) {
+                    tmpHome += 7;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1 && tmpHome < 57) {
+                    tmpHome += 9;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome > 8) {
+                    tmpHome -= 8;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome < 57) {
+                    tmpHome += 8;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 0) {
+                    tmpHome -= 1;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                tmpHome = home;
+                while (tmpHome % 8 != 1) {
+                    tmpHome += 1;
+                    if (tmpHome >= 1 && tmpHome <= 64) {
+                        moveHomes.push_back(tmpHome);
+                    }
+                }
+                break;
+            }
+            case CHESS_KING: {
+                //-- Left
+                if (home > 8) {
+                    moveHomes.push_back(home - 8 - 1);
+                }
+                //-- Right
+                if (home < 57) {
+                    moveHomes.push_back(home + 8 - 1);
+                }
+                //-- Up
+                if (home % 8 != 0) {
+                    moveHomes.push_back(home + 1 - 1);
+                    //-- Up Right
+                    if (home < 57) {
+                        moveHomes.push_back(home + 1 + 8 - 1);
+                    }
+                    //-- Up Left
+                    if (home > 8) {
+                        moveHomes.push_back(home + 1 - 8 - 1);
+                    }
+                }
+                //-- Down
+                if (home % 8 != 1) {
+                    moveHomes.push_back(home - 1 - 1);
+                    //-- Down Right
+                    if (home < 57) {
+                        moveHomes.push_back(home - 1 + 8 - 1);
+                    }
+                    //-- Down Left
+                    if (home > 8) {
+                        moveHomes.push_back(home - 1 - 8 - 1);
+                    }
+                }
+                break;
+            }
+        }
         for (int i = 0; i < moveHomes.size(); i++) {
-            std::cout << TAB TAB TAB MOVE "Can be Moved to Home " << moveHomes.at(i) << std::endl;
+            std::cout << WARNING INFO << moveHomes.at(i) << ENDL;
         }
     }
     //-- Method to Get Piece Move Homes
@@ -637,6 +760,7 @@
         std::cout << LOG "Generating Chess Homes" ENDL;
         char row;
         int homeID = 8;
+        home.resize(64);
         //-- Generate Homes
         for (int i = 0; i < 8; i++) {
             row = char(65 + i);
@@ -652,7 +776,8 @@
                 new_home.name.push_back(char(56 - j));
                 new_home.isFileld = HOME_EMPTY;
                 std::cout << TAB LOG "Home " << new_home.name <<" has been Generated at " << new_home.center_x << " x " << new_home.center_y << " with ID " << new_home.id << ENDL;
-                home.push_back(new_home);
+                // home.push_back(new_home);
+                home[homeID - 1] = new_home;
                 cv::circle(
                     board.window,
                     cv::Point(
@@ -1056,17 +1181,68 @@
     //-- Method to Check Moves of Pieces on Board
     void Chess::checkMoves() {
         programState = STATE_CHECK_CHECKMATE;
-        cv::imshow("Chess Board2", board.window);
-        cv::waitKey(0);
-        // int pieceCount = pieces.size();
-        // if (pieceCount == 1) {
-        //     std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Piece" << ENDL;
-        // } else {
-        //     std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
-        // }
-        // for (int i = 0; i < pieces.size(); i++) {
+        cv::imshow("Chess Board", board.window);
+        //-- Count Amount of Pieces
+        int pieceCount = pieces.size();
+        if (pieceCount == 1) {
+            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Piece" << ENDL;
+        } else {
+            std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
+        }
+        //-- Calculate Moves of Pieces
+        for (int i = 0; i < pieceCount; i++) {
+            PieceInfo tmp = pieces.at(i).getInfo();
+            std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
+            std::vector<int> moves = pieces.at(i).getMoveHomes();
+            cv::Mat tmpMat;
+            board.window.copyTo(tmpMat);
+            for (int j = 0; j < moves.size(); j++) {
+                // std::cout << "wow" << std::endl;
+                for (int h = 0; h < home.size(); h++) {
+                    if (home.at(h).id == tmp.home) {
+                        std::cout << TAB INFO "Piece " << tmp.id << " Can Move to Home " << home.at(moves.at(j)).id << std::endl;
+                        cv::rectangle(
+                            tmpMat,
+                            cv::Point(
+                                home.at(moves.at(j)).x,
+                                home.at(moves.at(j)).y
+                            ),
+                            cv::Point(
+                                home.at(moves.at(j)).x + home.at(moves.at(j)).size,
+                                home.at(moves.at(j)).y + home.at(moves.at(j)).size
+                            ),
+                            cv::Scalar(
+                                255, 255, 100
+                            ),
+                            4, 8, 0
+                        );
+                    }
+                    // if (home.at(h).id == tmp.home) {
+                    //     cv::rectangle(
+                    //         tmpMat,
+                    //         cv::Point(
+                    //             home.at(moves.at(j)).x,
+                    //             home.at(moves.at(j)).y
+                    //         ),
+                    //         cv::Point(
+                    //             home.at(moves.at(j)).x + home.at(moves.at(j)).size,
+                    //             home.at(moves.at(j)).y + home.at(moves.at(j)).size
+                    //         ),
+                    //         cv::Scalar(
+                    //             255, 255, 0
+                    //         ),
+                    //         4, 8, 0
+                    //     );
+                    // }
+                }
+                cv::imshow("Chess Board", tmpMat);
+                cv::waitKey(0);
+                board.window.copySize(tmpMat);
+            }
+            board.window.copyTo(tmpMat);
+        }
+        // for (int i = 0; i < pieces; i++) {
         //     PieceInfo tmp = pieces.at(i).getInfo();
-        //     std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
         //     std::vector<int> moves = pieces.at(i).getMoveHomes();
         //     cv::Mat tmpMat;
         //     board.window.copyTo(tmpMat);
