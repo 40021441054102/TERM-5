@@ -87,6 +87,7 @@
         CHESS_H1, CHESS_H2, CHESS_H3, CHESS_H4, CHESS_H5, CHESS_H6, CHESS_H7, CHESS_H8,
     };
     struct PieceInfo {
+        int home_color;
         int color;
         int home;
         int id;
@@ -183,6 +184,7 @@
                 int center_x, center_y;
                 std::string name;
                 int isFileld;
+                int color;
                 int x, y;
                 int size;
                 int id;

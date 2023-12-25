@@ -51,13 +51,30 @@
         // home -= 1;
         switch (id) {
             case CHESS_PAWN: {
-                if (color == CHESS_DARK) {
-                    if (home > 8) {
-                        moveHomes.push_back(home - 8);
+                //-- Forward Moves
+                if (color == CHESS_LIGHT) {
+                    if (home % 8 != 0) {
+                        moveHomes.push_back(home + 1 - 1);
+                        //-- Diagonal Attack Right
+                        if (home < 57) {
+                            moveHomes.push_back(home + 1 + 8 - 1);
+                        }
+                        //-- Diagonal Attack Left
+                        if (home > 8) {
+                            moveHomes.push_back(home + 1 - 8 - 1);
+                        }
                     }
-                } else if (color == CHESS_LIGHT) {
-                    if (home < 57) {
-                        moveHomes.push_back(home + 8);
+                } else if (color == CHESS_DARK) {
+                    if (home % 8 != 1) {
+                        moveHomes.push_back(home - 1 - 1);
+                        //-- Diagonal Attack Right
+                        if (home < 57) {
+                            moveHomes.push_back(home - 1 + 8 - 1);
+                        }
+                        //-- Diagonal Attack Left
+                        if (home > 8) {
+                            moveHomes.push_back(home - 1 - 8 - 1);
+                        }
                     }
                 }
                 break;
@@ -839,9 +856,11 @@
                 sign *= -1;
             }
             if (sign == -1) {
-                color = 0;
-            } else {
                 color = 255;
+                home.at(i).color = CHESS_LIGHT;
+            } else {
+                color = 0;
+                home.at(i).color = CHESS_DARK;
             }
             cv::rectangle(
                 board.window,
@@ -861,17 +880,13 @@
             cv::imshow("Chess Board", board.window);
             cv::waitKey(SPEED);
         }
-        sign = 1;
         cv::Scalar rgbColor;
         //-- Draw Brown and Cream Homes
-        for (int i = 0; i < 64; i++) {
-            if (i % 8 != 0) {
-                sign *= -1;
-            }
-            if (sign == -1) {
-                rgbColor = cv::Scalar(46, 58, 87);
-            } else {
+        for (int i = 0; i < home.size(); i++) {
+            if (home.at(i).color == CHESS_LIGHT) {
                 rgbColor = cv::Scalar(93, 120, 138);
+            } else {
+                rgbColor = cv::Scalar(46, 58, 87);
             }
             cv::rectangle(
                 board.window,
@@ -1197,7 +1212,6 @@
             cv::Mat tmpMat;
             board.window.copyTo(tmpMat);
             for (int j = 0; j < moves.size(); j++) {
-                // std::cout << "wow" << std::endl;
                 for (int h = 0; h < home.size(); h++) {
                     if (home.at(h).id == tmp.home) {
                         std::cout << TAB INFO "Piece " << tmp.id << " Can Move to Home " << home.at(moves.at(j)).id << std::endl;
@@ -1217,60 +1231,13 @@
                             4, 8, 0
                         );
                     }
-                    // if (home.at(h).id == tmp.home) {
-                    //     cv::rectangle(
-                    //         tmpMat,
-                    //         cv::Point(
-                    //             home.at(moves.at(j)).x,
-                    //             home.at(moves.at(j)).y
-                    //         ),
-                    //         cv::Point(
-                    //             home.at(moves.at(j)).x + home.at(moves.at(j)).size,
-                    //             home.at(moves.at(j)).y + home.at(moves.at(j)).size
-                    //         ),
-                    //         cv::Scalar(
-                    //             255, 255, 0
-                    //         ),
-                    //         4, 8, 0
-                    //     );
-                    // }
                 }
                 cv::imshow("Chess Board", tmpMat);
-                cv::waitKey(0);
+                cv::waitKey(SPEED * 10);
                 board.window.copySize(tmpMat);
             }
             board.window.copyTo(tmpMat);
         }
-        // for (int i = 0; i < pieces; i++) {
-        //     PieceInfo tmp = pieces.at(i).getInfo();
-        //     std::vector<int> moves = pieces.at(i).getMoveHomes();
-        //     cv::Mat tmpMat;
-        //     board.window.copyTo(tmpMat);
-        //     for (int j = 0; j < moves.size(); j++) {
-        //         // std::cout << "wow" << std::endl;
-        //         for (int h = 0; h < home.size(); h++) {
-        //             if (home.at(h).id == tmp.home) {
-        //                 cv::rectangle(
-        //                     tmpMat,
-        //                     cv::Point(
-        //                         home.at(moves.at(j)).x,
-        //                         home.at(moves.at(j)).y
-        //                     ),
-        //                     cv::Point(
-        //                         home.at(moves.at(j)).x + home.at(moves.at(j)).size,
-        //                         home.at(moves.at(j)).y + home.at(moves.at(j)).size
-        //                     ),
-        //                     cv::Scalar(
-        //                         255, 255, 0
-        //                     ),
-        //                     4, 8, 0
-        //                 );
-        //             }
-        //         }
-        //         cv::imshow("Chess Board", tmpMat);
-        //         cv::waitKey(100);
-        //     }
-        // }
     }
     //-- Start Animation
     void Chess::startAnimation() {
