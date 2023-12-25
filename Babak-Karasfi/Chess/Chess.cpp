@@ -167,32 +167,40 @@
             }
             case CHESS_CASTLE: {
                 int tmpHome = home;
-                while (tmpHome > 8) {
-                    tmpHome -= 8;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
-                    }
-                }
-                tmpHome = home;
-                while (tmpHome < 57) {
+                //-- Right
+                for (int i = 0; i < 8; i++) {
                     tmpHome += 8;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                    if (tmpHome > 64) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
                 }
+                //-- Left
                 tmpHome = home;
-                while (tmpHome % 8 != 0 && tmpHome > 1) {
-                    tmpHome -= 1;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 8;
+                    if (tmpHome < 1) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
                 }
+                //-- Up
                 tmpHome = home;
-                while (tmpHome % 8 != 1 && tmpHome < 64) {
+                for (int i = 0; i < 8; i++) {
                     tmpHome += 1;
-                    if (tmpHome >= 1 && tmpHome <= 64) {
-                        moveHomes.push_back(tmpHome);
+                    if (tmpHome % 8 == 1) {
+                        break;
                     }
+                    moveHomes.push_back(tmpHome - 1);
+                }
+                //-- Down
+                tmpHome = home;
+                for (int i = 0; i < 8; i++) {
+                    tmpHome -= 1;
+                    if (tmpHome % 8 == 0) {
+                        break;
+                    }
+                    moveHomes.push_back(tmpHome - 1);
                 }
                 break;
             }
