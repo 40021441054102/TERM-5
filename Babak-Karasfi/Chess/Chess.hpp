@@ -102,6 +102,7 @@
             std::vector<int> moveHomes;
             std::vector<int> attackHomes;
         public:
+            int parent;
             Piece(
                 std::int8_t &,
                 std::int8_t &,

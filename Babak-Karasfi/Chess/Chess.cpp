@@ -47,8 +47,8 @@
     void Piece::findMoveHomes() {
         //-- Clear Move Homes
         moveHomes.resize(0);
+        parent = home - 1;
         //-- Find Move Homes
-        // home -= 1;
         switch (id) {
             case CHESS_PAWN: {
                 //-- Forward Moves
@@ -1246,16 +1246,16 @@
             std::cout << TAB LOG "Checking Moves of " << pieces.size() << " Pieces" << ENDL;
         }
         //-- Calculate Moves of Pieces
+        cv::Mat tmpMat;
         for (int i = 0; i < pieceCount; i++) {
             PieceInfo tmp = pieces.at(i).getInfo();
             std::cout << TAB TAB LOG "Calculating Moves of Piece " << tmp.id << " on Home " << tmp.home << std::endl;
             std::vector<int> moves = pieces.at(i).getMoveHomes();
-            cv::Mat tmpMat;
             board.window.copyTo(tmpMat);
             for (int j = 0; j < moves.size(); j++) {
                 for (int h = 0; h < home.size(); h++) {
                     if (home.at(h).id == tmp.home) {
-                        std::cout << TAB INFO "Piece " << tmp.id << " Can Move to Home " << home.at(moves.at(j)).id << std::endl;
+                        std::cout << TAB TAB TAB INFO "Piece " << tmp.id << " Can Move to Home " << home.at(moves.at(j)).id << std::endl;
                         cv::rectangle(
                             tmpMat,
                             cv::Point(
@@ -1271,14 +1271,330 @@
                             ),
                             4, 8, 0
                         );
+                        cv::circle(
+                            tmpMat,
+                            cv::Point(
+                                home.at(moves.at(j)).center_x,
+                                home.at(moves.at(j)).center_y
+                            ),
+                            5,
+                            cv::Scalar(
+                                0, 170, 255
+                            ),
+                            -1, 8, 0
+                        );
                     }
                 }
                 cv::imshow("Chess Board", tmpMat);
-                // cv::waitKey(SPEED * 10);
-                cv::waitKey(0);
+                cv::waitKey(SPEED * 6);
+                // cv::waitKey(0);
                 board.window.copySize(tmpMat);
             }
             board.window.copyTo(tmpMat);
+        }
+        //-- Check Checkmate State for each King on Board
+        std::cout << TAB LOG "Finding Kings on Board ..." ENDL;
+        std::vector<int> king_moves;
+        for (int i = 0; i < pieceCount; i++) {
+            king_moves.resize(0);
+            if (pieces.at(i).getInfo().id == CHESS_KING) {
+                std::cout << TAB TAB SUCCESS "King Found on Home " << pieces.at(i).getInfo().home << ENDL;
+                //-- Store King Moves and Its home on Last Index
+                king_moves = pieces.at(i).getMoveHomes();
+                king_moves.push_back(pieces.at(i).parent);
+                //-- Show Found King on Board
+                cv::rectangle(
+                    tmpMat,
+                    cv::Point(
+                        home.at(pieces.at(i).parent).x,
+                        home.at(pieces.at(i).parent).y
+                    ),
+                    cv::Point(
+                        home.at(pieces.at(i).parent).x + home.at(pieces.at(i).parent).size,
+                        home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size
+                    ),
+                    cv::Scalar(
+                        0, 255, 0
+                    ),
+                    4, 8, 0
+                );
+                cv::putText(
+                    tmpMat,
+                    "King    " + std::to_string(pieces.at(i).getInfo().home),
+                    cv::Point(
+                        home.at(pieces.at(i).getInfo().home - 1).x + 10,
+                        home.at(pieces.at(i).getInfo().home - 1).y + 30
+                    ),
+                    cv::FONT_HERSHEY_SIMPLEX,
+                    1,
+                    cv::Scalar(0, 255, 0),
+                    2
+                );
+                cv::imshow("Chess Board", tmpMat);
+                cv::waitKey(SPEED * 30);
+                //-- Iterate on All Pieces Again and Find if King is in Checkmate State
+                std::cout << TAB TAB LOG "Checking Checkmate State of King on Home " << pieces.at(i).getInfo().home << ENDL;
+                std::vector<int> moves;
+                cv::Mat tmpMat2;
+                tmpMat.copyTo(tmpMat2);
+                for (int j = 0; j < pieceCount; j++) {
+                    if (pieces.at(j).getInfo().id == CHESS_KING) {
+                        continue;
+                    }
+                    //-- Store Moves of Pieces
+                    moves.resize(0);
+                    moves = pieces.at(j).getMoveHomes();
+                    //-- Check if King is in Checkmate State
+                    for (int k = 0; k < moves.size(); k++) {
+                        cv::rectangle(
+                            tmpMat2,
+                            cv::Point(
+                                home.at(moves.at(k)).x,
+                                home.at(moves.at(k)).y
+                            ),
+                            cv::Point(
+                                home.at(moves.at(k)).x + home.at(moves.at(k)).size,
+                                home.at(moves.at(k)).y + home.at(moves.at(k)).size
+                            ),
+                            cv::Scalar(
+                                0, 255, 255
+                            ),
+                            4, 8, 0
+                        );
+                        if (moves.at(k) == king_moves.at(king_moves.size() - 1)) {
+                            std::cout << TAB TAB TAB INFO "King on Home " << pieces.at(i).getInfo().home << " is in Checkmate State by Piece on Home " << pieces.at(j).getInfo().home << ENDL;
+                            cv::rectangle(
+                                tmpMat,
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x,
+                                    home.at(pieces.at(i).parent).y
+                                ),
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x + home.at(pieces.at(i).parent).size,
+                                    home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size
+                                ),
+                                cv::Scalar(
+                                    0, 0, 255
+                                ),
+                                4, 8, 0
+                            );
+                            cv::rectangle(
+                                tmpMat2,
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x,
+                                    home.at(pieces.at(i).parent).y
+                                ),
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x + home.at(pieces.at(i).parent).size,
+                                    home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size
+                                ),
+                                cv::Scalar(
+                                    0, 0, 255
+                                ),
+                                4, 8, 0
+                            );
+                            cv::putText(
+                                tmpMat,
+                                "Checkmate",
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x + 10,
+                                    home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size - 10
+                                ),
+                                cv::FONT_HERSHEY_SIMPLEX,
+                                0.8,
+                                cv::Scalar(0, 0, 255),
+                                2
+                            );
+                            cv::putText(
+                                tmpMat2,
+                                "Checkmate",
+                                cv::Point(
+                                    home.at(pieces.at(i).parent).x + 10,
+                                    home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size - 10
+                                ),
+                                cv::FONT_HERSHEY_SIMPLEX,
+                                0.8,
+                                cv::Scalar(0, 0, 255),
+                                2
+                            );
+                            cv::putText(
+                                tmpMat,
+                                "Attacker",
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x + 10,
+                                    home.at(pieces.at(j).parent).y + 30
+                                ),
+                                cv::FONT_HERSHEY_SIMPLEX,
+                                1,
+                                cv::Scalar(0, 0, 255),
+                                2
+                            );
+                            cv::rectangle(
+                                tmpMat,
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x,
+                                    home.at(pieces.at(j).parent).y
+                                ),
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x + home.at(pieces.at(j).parent).size,
+                                    home.at(pieces.at(j).parent).y + home.at(pieces.at(j).parent).size
+                                ),
+                                cv::Scalar(
+                                    0, 0, 255
+                                ),
+                                4, 8, 0
+                            );
+                            cv::putText(
+                                tmpMat2,
+                                "Attacker",
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x + 10,
+                                    home.at(pieces.at(j).parent).y + 30
+                                ),
+                                cv::FONT_HERSHEY_SIMPLEX,
+                                1,
+                                cv::Scalar(0, 0, 255),
+                                2
+                            );
+                            cv::rectangle(
+                                tmpMat2,
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x,
+                                    home.at(pieces.at(j).parent).y
+                                ),
+                                cv::Point(
+                                    home.at(pieces.at(j).parent).x + home.at(pieces.at(j).parent).size,
+                                    home.at(pieces.at(j).parent).y + home.at(pieces.at(j).parent).size
+                                ),
+                                cv::Scalar(
+                                    0, 0, 255
+                                ),
+                                4, 8, 0
+                            );
+                            cv::imshow("Chess Board", tmpMat2);
+                            cv::waitKey(0);
+                            break;
+                        } else {
+                            for (int h = 0; h < king_moves.size() - 1; h++) {
+                                if (moves.at(k) == king_moves.at(h)) {
+                                    std::cout << TAB TAB TAB WARNING "King on Home " << pieces.at(i).getInfo().home << " is in Check State by Piece on Home " << pieces.at(j).getInfo().home << ENDL;
+                                    cv::rectangle(
+                                        tmpMat,
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x,
+                                            home.at(pieces.at(i).parent).y
+                                        ),
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x + home.at(pieces.at(i).parent).size,
+                                            home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size
+                                        ),
+                                        cv::Scalar(
+                                            0, 100, 255
+                                        ),
+                                        4, 8, 0
+                                    );
+                                    cv::rectangle(
+                                        tmpMat2,
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x,
+                                            home.at(pieces.at(i).parent).y
+                                        ),
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x + home.at(pieces.at(i).parent).size,
+                                            home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size
+                                        ),
+                                        cv::Scalar(
+                                            0, 100, 255
+                                        ),
+                                        4, 8, 0
+                                    );
+                                    cv::putText(
+                                        tmpMat,
+                                        "Check",
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x + 10,
+                                            home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size - 10
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+                                        0.8,
+                                        cv::Scalar(0, 100, 255),
+                                        2
+                                    );
+                                    cv::putText(
+                                        tmpMat2,
+                                        "Check",
+                                        cv::Point(
+                                            home.at(pieces.at(i).parent).x + 10,
+                                            home.at(pieces.at(i).parent).y + home.at(pieces.at(i).parent).size - 10
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+                                        0.8,
+                                        cv::Scalar(0, 100, 255),
+                                        2
+                                    );
+                                    cv::putText(
+                                        tmpMat,
+                                        "Attacker",
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x + 10,
+                                            home.at(pieces.at(j).parent).y + 30
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+
+                                        1,
+                                        cv::Scalar(0, 100, 255),
+                                        2
+                                    );
+                                    cv::rectangle(
+                                        tmpMat,
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x,
+                                            home.at(pieces.at(j).parent).y
+                                        ),
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x + home.at(pieces.at(j).parent).size,
+                                            home.at(pieces.at(j).parent).y + home.at(pieces.at(j).parent).size
+                                        ),
+                                        cv::Scalar(
+                                            0, 100, 255
+                                        ),
+                                        4, 8, 0
+                                    );
+                                    cv::putText(
+                                        tmpMat2,
+                                        "Attacker",
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x + 10,
+                                            home.at(pieces.at(j).parent).y + 30
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+                                        1,
+                                        cv::Scalar(0, 100, 255),
+                                        2
+                                    );
+                                    cv::rectangle(
+                                        tmpMat2,
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x,
+                                            home.at(pieces.at(j).parent).y
+                                        ),
+                                        cv::Point(
+                                            home.at(pieces.at(j).parent).x + home.at(pieces.at(j).parent).size,
+                                            home.at(pieces.at(j).parent).y + home.at(pieces.at(j).parent).size
+                                        ),
+                                        cv::Scalar(
+                                            0, 100, 255
+                                        ),
+                                        4, 8, 0
+                                    );
+                                    cv::imshow("Chess Board", tmpMat2);
+                                    cv::waitKey(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     //-- Start Animation
@@ -1375,7 +1691,6 @@
                     if (cv::waitKey(0) == int('e')) {
                         if (cv::waitKey(0) == int('c')) {
                             if (cv::waitKey(0) == int('k')) {
-                                std::cout << TAB SUCCESS "Checking Checkmate States ..." ENDL;
                                 chess.checkMoves();
                             } else {
                                 continue;
