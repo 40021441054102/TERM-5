@@ -1760,7 +1760,7 @@
         //-- Initialize Chess Window and Board
         Chess chess(size);
         //-- Show StartUp Animation
-        chess.startAnimation();
+        // chess.startAnimation();
         //-- Generate Chess Board
         chess.generateChessBoard();
         //-- Load Chess Pieces
