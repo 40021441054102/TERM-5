@@ -34,6 +34,7 @@ module mux4x1(
     );
 endmodule
 
+//-- Test Bench
 module test_mux4x1();
     reg i3, i2, i1, i0, sel1, sel0;
     wire f;
