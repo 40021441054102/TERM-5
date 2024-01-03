@@ -19,6 +19,8 @@ add_library(Algorithms
     Algorithms/Sorts/Insertion/Insertion.cpp
     Algorithms/Sorts/Selection/Selection.hpp
     Algorithms/Sorts/Selection/Selection.cpp
+    Algorithms/Sorts/Merge/Merge.hpp
+    Algorithms/Sorts/Merge/Merge.cpp
 )
 
 # Link libraries to the main executable

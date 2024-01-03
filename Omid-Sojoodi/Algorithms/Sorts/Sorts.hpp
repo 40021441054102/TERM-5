@@ -19,6 +19,10 @@
     # ifndef ALGORITHMS_SELECTION_SORT
         # include "Selection/Selection.hpp"
     # endif // ALGORITHMS_SELECTION_SORT
+    //-- Merge Sort
+    # ifndef ALGORITHMS_MERGE_SORT
+        # include "Merge/Merge.hpp"
+    # endif // ALGORITHMS_MERGE_SORT
     //-- Insertion Sort
     //-- Selection Sort
     //-- Merge Sort
@@ -45,5 +49,7 @@
             Insertion insertion;
             //-- Selection Sort
             Selection selection;
+            //-- Merge Sort
+            Merge merge;
     };
 # endif // ALGORITHMS_OMID_SOJOODI_SORTS
