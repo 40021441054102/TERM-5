@@ -156,7 +156,11 @@
                                 }
                                 algorithms.sorts.bubble.setData(algorithms.graphics.window, thetas, xPoints, yPoints);
                                 sortedPoints1 sorted;
-                                sorted = algorithms.sorts.bubble.getSorted();
+                                sorted = algorithms.sorts.bubble.getSorted(true);
+                                auto start_time = std::chrono::high_resolution_clock::now();
+                                sorted = algorithms.sorts.bubble.getSorted(false);
+                                auto end_time = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
                                 // //-- Remove Duplicates
                                 // std::cout << LOG "Removing Duplicates ..." << std::endl;
                                 // for (int i = 0; i < sorted.theta.size(); i++) {
@@ -198,6 +202,7 @@
                                     cv::imshow(WINDOW_NAME, show);
                                     cv::waitKey(10);
                                 }
+                                std::cout << INFO "Time Elapsed: " << duration << " Nano Seconds" << std::endl;
                                 cv::waitKey(0);
                                 break;
                             }
@@ -218,7 +223,11 @@
                                 }
                                 algorithms.sorts.insertion.setData(algorithms.graphics.window, thetas, xPoints, yPoints);
                                 sortedPoints2 sorted;
-                                sorted = algorithms.sorts.insertion.getSorted();
+                                sorted = algorithms.sorts.insertion.getSorted(true);
+                                auto start_time = std::chrono::high_resolution_clock::now();
+                                sorted = algorithms.sorts.insertion.getSorted(false);
+                                auto end_time = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
                                 //-- Show Sorted Points
                                 algorithms.graphics.window.copyTo(show);
                                 for (int i = 0; i < sorted.x.size(); i++) {
@@ -248,6 +257,7 @@
                                     cv::imshow(WINDOW_NAME, algorithms.graphics.window);
                                     cv::waitKey(10);
                                 }
+                                std::cout << INFO "Time Elapsed: " << duration << " Nano Seconds" << std::endl;
                                 cv::waitKey(0);
                                 break;
                             }

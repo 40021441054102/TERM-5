@@ -45,6 +45,6 @@
             //-- Set Data
             void setData(cv::Mat _window, std::vector<double> _theta, std::vector<int> _x, std::vector<int> _y);
             //-- Sort
-            sortedPoints2 getSorted();
+            sortedPoints2 getSorted(bool graphical);
     };
 # endif // ALGORITHMS_INSERTION_SORT

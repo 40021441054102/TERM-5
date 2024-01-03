@@ -45,6 +45,6 @@
             //-- Set Data
             void setData(cv::Mat _window, std::vector<double> _theta, std::vector<int> _x, std::vector<int> _y);
             //-- Sort
-            sortedPoints1 getSorted();
+            sortedPoints1 getSorted(bool graphical);
     };
 # endif // ALGORITHMS_BUBBLE_SORT
