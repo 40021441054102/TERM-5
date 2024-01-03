@@ -156,8 +156,19 @@
                                 algorithms.sorts.bubble.setData(algorithms.graphics.window, thetas, xPoints, yPoints);
                                 sortedPoints sorted;
                                 sorted = algorithms.sorts.bubble.getSorted();
-                                // thetas = algorithms.sorts.bubble.getSorted();
-                                // thetas.pop_back();
+                                // //-- Remove Duplicates
+                                // std::cout << LOG "Removing Duplicates ..." << std::endl;
+                                // for (int i = 0; i < sorted.theta.size(); i++) {
+                                //     for (int j = i + 1; j < sorted.theta.size(); j++) {
+                                //         if (sorted.theta[i] == sorted.theta[j]) {
+                                //             sorted.theta.erase(sorted.theta.begin() + j);
+                                //             sorted.x.erase(sorted.x.begin() + j);
+                                //             sorted.y.erase(sorted.y.begin() + j);
+                                //             j--;
+                                //         }
+                                //     }
+                                // }
+                                //-- Show Sorted Points
                                 for (int i = 0; i < sorted.x.size(); i++) {
                                     std::cout << sorted.theta[i] << std::endl;
                                     cv::circle(
@@ -166,19 +177,19 @@
                                             sorted.x[i],
                                             sorted.y[i]
                                         ),
-                                        9,
+                                        2,
                                         cv::Scalar(0, 255, 0),
                                         1,
                                         cv::LINE_4
                                     );
                                     cv::putText(
                                         algorithms.graphics.window,
-                                        std::to_string(i),
+                                        std::to_string(i + 1),
                                         cv::Point(
                                             sorted.x[i] - 11,
                                             sorted.y[i] + 25
                                         ),
-                                        cv::FONT_HERSHEY_COMPLEX,
+                                        cv::FONT_HERSHEY_SIMPLEX,
                                         0.5,
                                         cv::Scalar(255, 255, 255)
                                     );
