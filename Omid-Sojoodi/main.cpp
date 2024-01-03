@@ -262,6 +262,58 @@
                                 break;
                             }
                             case 3: {
+                                //-- Sort Points by Theta
+                                std::cout << LOG "Sorting Points by Theta ..." << std::endl;
+                                std::vector<double> thetas;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    thetas.push_back(algorithms.graphics.points[i].theta);
+                                }
+                                std::vector<int> xPoints;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    xPoints.push_back(algorithms.graphics.points[i].x);
+                                }
+                                std::vector<int> yPoints;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    yPoints.push_back(algorithms.graphics.points[i].y);
+                                }
+                                algorithms.sorts.selection.setData(algorithms.graphics.window, thetas, xPoints, yPoints);
+                                sortedPoints3 sorted;
+                                sorted = algorithms.sorts.selection.getSorted(true);
+                                auto start_time = std::chrono::high_resolution_clock::now();
+                                sorted = algorithms.sorts.selection.getSorted(false);
+                                auto end_time = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+                                //-- Show Sorted Points
+                                algorithms.graphics.window.copyTo(show);
+                                for (int i = 0; i < sorted.x.size(); i++) {
+                                    std::cout << sorted.theta[i] << std::endl;
+                                    cv::circle(
+                                        show,
+                                        cv::Point(
+                                            sorted.x[i],
+                                            sorted.y[i]
+                                        ),
+                                        2,
+                                        cv::Scalar(0, 255, 0),
+                                        1,
+                                        cv::LINE_4
+                                    );
+                                    cv::putText(
+                                        show,
+                                        std::to_string(i + 1),
+                                        cv::Point(
+                                            sorted.x[i] - 11,
+                                            sorted.y[i] + 25
+                                        ),
+                                        cv::FONT_HERSHEY_SIMPLEX,
+                                        0.5,
+                                        cv::Scalar(255, 255, 255)
+                                    );
+                                    cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                    cv::waitKey(10);
+                                }
+                                std::cout << INFO "Time Elapsed: " << duration << " Nano Seconds" << std::endl;
+                                cv::waitKey(0);
                                 break;
                             }
                             case 0: {

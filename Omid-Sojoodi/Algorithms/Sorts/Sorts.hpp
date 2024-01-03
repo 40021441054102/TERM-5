@@ -15,6 +15,10 @@
     # ifndef ALGORITHMS_INSERTION_SORT
         # include "Insertion/Insertion.hpp"
     # endif // ALGORITHMS_INSERTION_SORT
+    //-- Selection Sort
+    # ifndef ALGORITHMS_SELECTION_SORT
+        # include "Selection/Selection.hpp"
+    # endif // ALGORITHMS_SELECTION_SORT
     //-- Insertion Sort
     //-- Selection Sort
     //-- Merge Sort
@@ -39,5 +43,7 @@
             Bubble bubble;
             //-- Insertion Sort
             Insertion insertion;
+            //-- Selection Sort
+            Selection selection;
     };
 # endif // ALGORITHMS_OMID_SOJOODI_SORTS
