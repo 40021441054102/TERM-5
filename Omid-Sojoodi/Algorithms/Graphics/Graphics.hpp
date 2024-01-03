@@ -34,5 +34,7 @@
         public:
             //-- Constructor
             Graphics();
+            //-- Start Animation
+            void startAnimation();
     };
 # endif // ALGORITHMS_OMID_SOJOODI_GRAPHICS
