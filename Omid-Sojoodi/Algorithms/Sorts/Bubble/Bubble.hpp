@@ -29,7 +29,7 @@
     //-- Define Configurations
     # define WINDOW_NAME "Graphical View"
     //-- Define Point Structure
-    struct sortedPoints {
+    struct sortedPoints1 {
         std::vector<double> theta;
         std::vector<int> x;
         std::vector<int> y;
@@ -37,7 +37,7 @@
     //-- Class Definition
     class Bubble {
         private:
-            sortedPoints sorted;
+            sortedPoints1 sorted;
             cv::Mat window;
         public:
             //-- Constructor
@@ -45,6 +45,6 @@
             //-- Set Data
             void setData(cv::Mat _window, std::vector<double> _theta, std::vector<int> _x, std::vector<int> _y);
             //-- Sort
-            sortedPoints getSorted();
+            sortedPoints1 getSorted();
     };
 # endif // ALGORITHMS_BUBBLE_SORT

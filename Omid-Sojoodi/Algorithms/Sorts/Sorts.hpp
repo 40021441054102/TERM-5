@@ -12,6 +12,10 @@
         # include "Bubble/Bubble.hpp"
     # endif // ALGORITHMS_BUBBLE_SORT
     //-- Insertion Sort
+    # ifndef ALGORITHMS_INSERTION_SORT
+        # include "Insertion/Insertion.hpp"
+    # endif // ALGORITHMS_INSERTION_SORT
+    //-- Insertion Sort
     //-- Selection Sort
     //-- Merge Sort
     //-- Quick Sort
@@ -33,5 +37,7 @@
             Sorts();
             //-- Bubble Sort
             Bubble bubble;
+            //-- Insertion Sort
+            Insertion insertion;
     };
 # endif // ALGORITHMS_OMID_SOJOODI_SORTS

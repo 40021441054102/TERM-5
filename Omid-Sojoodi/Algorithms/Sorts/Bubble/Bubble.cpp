@@ -12,7 +12,7 @@
         sorted.y = _y;
     }
     //-- Sort
-    sortedPoints Bubble::getSorted() {
+    sortedPoints1 Bubble::getSorted() {
         std::vector<double> theta = sorted.theta;
         std::vector<int> x = sorted.x;
         std::vector<int> y = sorted.y;
@@ -57,7 +57,7 @@
             cv::waitKey(1);
             window.copyTo(tmp);
         }
-        sortedPoints output;
+        sortedPoints1 output;
         output.theta = theta;
         output.x = x;
         output.y = y;

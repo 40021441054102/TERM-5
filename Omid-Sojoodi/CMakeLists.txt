@@ -15,6 +15,8 @@ add_library(Algorithms
     Algorithms/Sorts/Sorts.cpp
     Algorithms/Sorts/Bubble/Bubble.hpp
     Algorithms/Sorts/Bubble/Bubble.cpp
+    Algorithms/Sorts/Insertion/Insertion.hpp
+    Algorithms/Sorts/Insertion/Insertion.cpp
 )
 
 # Link libraries to the main executable
