@@ -10,6 +10,8 @@
     }
     //-- Constructor
     Graphics::Graphics() {
+        std::cout << LOG "Graphics Module Loaded Successfully!" << std::endl;
+        points.resize(0);
         window = cv::Mat(
             WINDOW_HEIGHT,
             WINDOW_WIDTH,
@@ -105,5 +107,26 @@
         }
         cv::imshow(WINDOW_NAME, window);
         mainTMP.copyTo(window);
+    }
+    //-- Method to Show Generated Points
+    void Graphics::showPoints() {
+        window.copyTo(tmpMat);
+        for (int i = 0; i < points.size(); i++) {
+            cv::circle(
+                window,
+                cv::Point(
+                    points[i].x,
+                    points[i].y
+                ),
+                2,
+                cv::Scalar(255, 255, 0),
+                cv::FILLED,
+                cv::LINE_4,
+                0
+            );
+            cv::imshow(WINDOW_NAME, window);
+            cv::waitKey(1);
+        }
+        cv::imshow(WINDOW_NAME, window);
     }
 # endif // ALGORITHMS_OMID_SOJOODI_GRAPHICS

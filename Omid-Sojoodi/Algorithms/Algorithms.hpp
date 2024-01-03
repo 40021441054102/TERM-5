@@ -16,6 +16,9 @@
     # endif // ALGORITHMS_OMID_SOJOODI_SORTS
     //-- Include Needed Libraries
     # include <iostream>
+    # include <random>
+    //-- Amount of Points
+    # define AMOUNT_OF_POINTS 100
     //-- Define Log Messages
     # define LOG "\033[38;2;0;255;0m[LOG]\033[0m "
     # define INFO "\033[38;2;0;255;255m[INFO]\033[0m "
@@ -23,14 +26,20 @@
     # define SUCCESS "\033[38;2;0;255;0m[SUCCESS]\033[0m "
     # define WARNING "\033[38;2;255;255;0m[WARNING]\033[0m "
     # define RESET "\033[0m"
+    # define TAB "   "
     //-- Class Definition
     class Algorithms {
-        private:
+        public:
             //-- Graphics
             Graphics graphics;
-        public:
             //-- Constructor
             Algorithms();
+            //-- Generate Random Data
+            void generateRandomData(
+                int size,
+                int min,
+                int max
+            );
             //-- Sorts
             Sorts sorts;
     };

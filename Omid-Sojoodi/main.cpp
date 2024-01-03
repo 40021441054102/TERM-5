@@ -46,6 +46,8 @@
                         std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
                         switch(choice) {
                             case 1: {
+                                algorithms.graphics.showPoints();
+                                // algorithms.sorts.bubble.
                                 break;
                             }
                             case 2: {
