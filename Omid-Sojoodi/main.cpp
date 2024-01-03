@@ -13,6 +13,7 @@
     # define RESET "\033[0m"
     //-- Main Function
     int main() {
+        cv::Mat tmp, tmp2;
         int choice = -1;
         Algorithms algorithms;
         while(true) {
@@ -28,13 +29,14 @@
             std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
             switch (choice) {
                 case 1: {
+                    algorithms.graphics.showPoints();
                     while (true) {
                         if (choice == 0) {
                             choice = -1;
                             break;
                         }
                         std::cout << "\033[2J\x1b[H" << std::endl;
-                        std::cout << YELLOW "Available Sorts:" RESET << std::endl;
+                        std::cout << YELLOW "Available Sorts (Sort by Theta from Lowest Point):" RESET << std::endl;
                         std::cout << YELLOW "1." YELLOW2 " Bubble Sort" RESET << std::endl;
                         std::cout << YELLOW "2." YELLOW2 " Insertion Sort" RESET << std::endl;
                         std::cout << YELLOW "3." YELLOW2 " Selection Sort" RESET << std::endl;
@@ -43,11 +45,164 @@
                         std::cout << YELLOW "6." YELLOW2 " Heap Sort" RESET << std::endl;
                         std::cout << YELLOW "8." YELLOW2 " Radix Sort" RESET << std::endl;
                         std::cout << YELLOW "0." YELLOW2 " Back" RESET << std::endl;
+                        //-- Find Lowest Point
+                        std::cout << LOG "Finding Lowest Point ..." << std::endl;
+                        int lowestPointIndex = 0;
+                        algorithms.graphics.window.copyTo(tmp);
+                        for (int i = 1; i < algorithms.graphics.points.size(); i++) {
+                            if (algorithms.graphics.points[i].y > algorithms.graphics.points[lowestPointIndex].y) {
+                                cv::circle(
+                                    algorithms.graphics.window,
+                                    cv::Point(
+                                        algorithms.graphics.points[lowestPointIndex].x,
+                                        algorithms.graphics.points[lowestPointIndex].y
+                                    ),
+                                    10,
+                                    cv::Scalar(0, 170, 170),
+                                    1,
+                                    cv::LINE_8
+                                );
+                                cv::line(
+                                    algorithms.graphics.window,
+                                    cv::Point(
+                                        algorithms.graphics.points[lowestPointIndex].x,
+                                        algorithms.graphics.points[lowestPointIndex].y
+                                    ),
+                                    cv::Point(
+                                        algorithms.graphics.points[i].x,
+                                        algorithms.graphics.points[i].y
+                                    ),
+                                    cv::Scalar(0, 120, 120),
+                                    1,
+                                    cv::LINE_4
+                                );
+                                lowestPointIndex = i;
+                            }
+                            cv::circle(
+                                algorithms.graphics.window,
+                                cv::Point(
+                                    algorithms.graphics.points[lowestPointIndex].x,
+                                    algorithms.graphics.points[lowestPointIndex].y
+                                ),
+                                7,
+                                cv::Scalar(0, 255, 0),
+                                1,
+                                cv::LINE_8
+                                );
+                            cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                            cv::waitKey(1);
+                        }
+                        tmp.copyTo(algorithms.graphics.window);
+                        std::cout << LOG "Lowest Point Found Successfully at (" << algorithms.graphics.points.at(lowestPointIndex).x << ", " << algorithms.graphics.points.at(lowestPointIndex).y << ")" << std::endl;
                         std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
                         switch(choice) {
                             case 1: {
-                                algorithms.graphics.showPoints();
-                                // algorithms.sorts.bubble.
+                                //-- Calculate Theta of each Point from Lowest Point
+                                std::cout << LOG "Calculating Theta of each Point from Lowest Point ..." << std::endl;
+                                algorithms.graphics.window.copyTo(tmp);
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    algorithms.graphics.points[i].theta = atan2(
+                                        algorithms.graphics.points[i].y - algorithms.graphics.points[lowestPointIndex].y,
+                                        algorithms.graphics.points[i].x - algorithms.graphics.points[lowestPointIndex].x
+                                    );
+                                    cv::circle(
+                                        algorithms.graphics.window,
+                                        cv::Point(
+                                            algorithms.graphics.points[i].x,
+                                            algorithms.graphics.points[i].y
+                                        ),
+                                        7,
+                                        cv::Scalar(120, 120, 0),
+                                        1,
+                                        cv::LINE_4
+                                    );
+                                    algorithms.graphics.points[i].theta = algorithms.graphics.points[i].theta * 180 / M_PI;
+                                    algorithms.graphics.window.copyTo(tmp2);
+                                    cv::line(
+                                        algorithms.graphics.window,
+                                        cv::Point(
+                                            algorithms.graphics.points[lowestPointIndex].x,
+                                            algorithms.graphics.points[lowestPointIndex].y
+                                        ),
+                                        cv::Point(
+                                            algorithms.graphics.points[i].x,
+                                            algorithms.graphics.points[i].y
+                                        ),
+                                        cv::Scalar(255, 255, 0),
+                                        1,
+                                        cv::LINE_4
+                                    );
+                                    cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                    cv::waitKey(1);
+                                    tmp2.copyTo(algorithms.graphics.window);
+                                }
+                                cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                cv::waitKey(1);
+                                tmp.copyTo(algorithms.graphics.window);
+                                //-- Sort Points by Theta
+                                std::cout << LOG "Sorting Points by Theta ..." << std::endl;
+                                std::vector<double> thetas;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    thetas.push_back(algorithms.graphics.points[i].theta);
+                                }
+                                std::vector<int> xPoints;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    xPoints.push_back(algorithms.graphics.points[i].x);
+                                }
+                                std::vector<int> yPoints;
+                                for (int i = 0; i < algorithms.graphics.points.size(); i++) {
+                                    yPoints.push_back(algorithms.graphics.points[i].y);
+                                }
+                                algorithms.sorts.bubble.setData(algorithms.graphics.window, thetas, xPoints, yPoints);
+                                sortedPoints sorted;
+                                sorted = algorithms.sorts.bubble.getSorted();
+                                // thetas = algorithms.sorts.bubble.getSorted();
+                                // thetas.pop_back();
+                                for (int i = 0; i < sorted.x.size(); i++) {
+                                    std::cout << sorted.theta[i] << std::endl;
+                                    cv::circle(
+                                        algorithms.graphics.window,
+                                        cv::Point(
+                                            sorted.x[i],
+                                            sorted.y[i]
+                                        ),
+                                        9,
+                                        cv::Scalar(0, 255, 0),
+                                        1,
+                                        cv::LINE_4
+                                    );
+                                    cv::putText(
+                                        algorithms.graphics.window,
+                                        std::to_string(i),
+                                        cv::Point(
+                                            sorted.x[i] - 11,
+                                            sorted.y[i] + 25
+                                        ),
+                                        cv::FONT_HERSHEY_COMPLEX,
+                                        0.5,
+                                        cv::Scalar(255, 255, 255)
+                                    );
+                                    cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                    cv::waitKey(10);
+                                }
+                                cv::waitKey(0);
+                                // for (int i = 0; i < thetas.size(); i++) {
+                                //     std::cout << thetas[i] << std::endl;
+                                //     cv::circle(
+                                //         algorithms.graphics.window,
+                                //         cv::Point(
+                                //             algorithms.graphics.points[i].x,
+                                //             algorithms.graphics.points[i].y
+                                //         ),
+                                //         3,
+                                //         cv::Scalar(0, 255, 0),
+                                //         cv::FILLED,
+                                //         cv::LINE_4
+                                //     );
+                                //     algorithms.graphics.points[i].theta = thetas[i];
+                                //     cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                //     cv::waitKey(1);
+                                // }
                                 break;
                             }
                             case 2: {

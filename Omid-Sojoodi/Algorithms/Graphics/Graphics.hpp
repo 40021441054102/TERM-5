@@ -36,10 +36,9 @@
     };
     //-- Graphics Class Definition
     class Graphics {
-        private:
+        public:
             //-- Main Window
             cv::Mat window, tmpMat;
-        public:
             //-- Points
             std::vector<Point> points;
             //-- Constructor
