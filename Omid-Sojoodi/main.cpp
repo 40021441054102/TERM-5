@@ -14,9 +14,10 @@
     # define RESET "\033[0m"
     //-- Main Function
     int main() {
-        cv::Mat tmp, tmp2, show;
+        cv::Mat tmp, tmp2, show, mainWindow;
         int choice = -1;
         Algorithms algorithms;
+        algorithms.graphics.window.copyTo(mainWindow);
         while(true) {
             if (choice == 0) {
                 cv::destroyAllWindows();
@@ -25,19 +26,19 @@
             std::cout << "\033[2J\x1b[H" << std::endl;
             std::cout << CYAN "Available Algorithms:" RESET << std::endl;
             std::cout << CYAN "1." CYAN2 " Sorts" RESET << std::endl;
-            std::cout << CYAN "2." CYAN2 " TSP" RESET << std::endl;
+            std::cout << CYAN "2." CYAN2 " Binary Search" RESET << std::endl;
+            // std::cout << CYAN "2." CYAN2 " TSP" RESET << std::endl;
+            // std::cout << CYAN "3." CYAN2 " 8 Queens" RESET << std::endl;
+            // std::cout << CYAN "4." CYAN2 " Min Max" RESET << std::endl;
             std::cout << CYAN "0." CYAN2 " Exit" RESET << std::endl;
             std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
             switch (choice) {
                 case 1: {
+                    mainWindow.copyTo(algorithms.graphics.window);
                     algorithms.graphics.showPoints();
                     while (true) {
-                        if (choice == 0) {
-                            choice = -1;
-                            break;
-                        }
                         std::cout << "\033[2J\x1b[H" << std::endl;
-                        std::cout << YELLOW "Available Sorts (Sort by Theta from Lowest Point):" RESET << std::endl;
+                        std::cout << YELLOW "Available Sorts (Sort by Theta from Lowest Point) :" RESET << std::endl;
                         std::cout << YELLOW "1." YELLOW2 " Bubble Sort" RESET << std::endl;
                         std::cout << YELLOW "2." YELLOW2 " Insertion Sort" RESET << std::endl;
                         std::cout << YELLOW "3." YELLOW2 " Selection Sort" RESET << std::endl;
@@ -95,6 +96,10 @@
                         tmp.copyTo(algorithms.graphics.window);
                         std::cout << LOG "Lowest Point Found Successfully at (" << algorithms.graphics.points.at(lowestPointIndex).x << ", " << algorithms.graphics.points.at(lowestPointIndex).y << ")" << std::endl;
                         std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
+                        if (choice == 0) {
+                            choice = -1;
+                            break;
+                        }
                         //-- Calculate Theta of each Point from Lowest Point
                         std::cout << LOG "Calculating Theta of each Point from Lowest Point ..." << std::endl;
                         algorithms.graphics.window.copyTo(tmp);
@@ -493,7 +498,115 @@
                     break;
                 }
                 case 2: {
-
+                    mainWindow.copyTo(algorithms.graphics.window);
+                    algorithms.graphics.showBoxes();
+                    while (true) {
+                        std::cout << "\033[2J\x1b[H" << std::endl;
+                        std::cout << YELLOW "Available Searchs :" RESET << std::endl;
+                        std::cout << YELLOW "1." YELLOW2 " Binary Search" RESET << std::endl;
+                        std::cout << YELLOW "0." YELLOW2 " Back" RESET << std::endl;
+                        //-- Generating Colorful Chess Board
+                        std::cout << GRAY "Please Select An Algorithm : " RESET; std::cin >> choice;
+                        if (choice == 0) {
+                            choice = -1;
+                            cv::destroyWindow(INFO_WINDOW_NAME);
+                            break;
+                        }
+                        std::cout << LOG "Generating Colorful Chess Board ..." << std::endl;
+                        algorithms.graphics.window.copyTo(tmp);
+                        for (int sizeCounter = 0; sizeCounter < 41; sizeCounter++) {
+                            algorithms.graphics.boxes.resize(0);
+                            algorithms.generateChessBoard(sizeCounter, true);
+                            for (int i = 0; i < algorithms.graphics.boxes.size(); i++) {
+                                cv::rectangle(
+                                    algorithms.graphics.window,
+                                    cv::Point(
+                                        algorithms.graphics.boxes[i].topLeft.x,
+                                        algorithms.graphics.boxes[i].topLeft.y
+                                    ),
+                                    cv::Point(
+                                        algorithms.graphics.boxes[i].bottomRight.x,
+                                        algorithms.graphics.boxes[i].bottomRight.y
+                                    ),
+                                    algorithms.graphics.boxes[i].color,
+                                    cv::FILLED,
+                                    cv::LINE_4
+                                );
+                                if (i % (sizeCounter) == 0) {
+                                    cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                    cv::waitKey(1);
+                                }
+                            }
+                        }
+                        std::cout << TAB SUCCESS "Chess Board Generated Successfully!" << std::endl;
+                        std::cout << LOG "Please Select Box ID to Search" << std::endl;
+                        std::cout << TAB TAB GRAY "Then Press 'S' Key " RESET << std::endl;
+                        cv::waitKey(0);
+                        algorithms.graphics.mouseStatus = EVENTS_INACTIVE;
+                        switch (choice) {
+                            case 1: {
+                                std::cout << LOG "Searching Box ID " << algorithms.graphics.selectedBoxID <<" ..." << std::endl;
+                                std::vector<int> array;
+                                array.resize(0);
+                                for (int i = 0; i < algorithms.graphics.boxes.size(); i++) {
+                                    array.push_back(i);
+                                }
+                                std::vector<box> boxes;
+                                for (int i = 0; i < algorithms.graphics.boxes.size(); i++) {
+                                    box tmpBox;
+                                    tmpBox.topLeft.x = algorithms.graphics.boxes[i].topLeft.x;
+                                    tmpBox.topLeft.y = algorithms.graphics.boxes[i].topLeft.y;
+                                    tmpBox.bottomRight.x = algorithms.graphics.boxes[i].bottomRight.x;
+                                    tmpBox.bottomRight.y = algorithms.graphics.boxes[i].bottomRight.y;
+                                    boxes.push_back(tmpBox);
+                                }
+                                // algorithms.search.binary.boxes
+                                algorithms.search.binary.setData(boxes, array, algorithms.graphics.window, algorithms.graphics.selectedBoxID);
+                                int result;
+                                result = algorithms.search.binary.getFound(true);
+                                auto start_time = std::chrono::high_resolution_clock::now();
+                                result = algorithms.search.binary.getFound(false);
+                                auto end_time = std::chrono::high_resolution_clock::now();
+                                auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end_time - start_time).count();
+                                //-- Show Result
+                                cv::rectangle(
+                                    algorithms.graphics.window,
+                                    cv::Point(
+                                        algorithms.graphics.boxes[result].topLeft.x,
+                                        algorithms.graphics.boxes[result].topLeft.y
+                                    ),
+                                    cv::Point(
+                                        algorithms.graphics.boxes[result].bottomRight.x,
+                                        algorithms.graphics.boxes[result].bottomRight.y
+                                    ),
+                                    cv::Scalar(0, 120, 0),
+                                    cv::FILLED,
+                                    cv::LINE_4
+                                );
+                                cv::rectangle(
+                                    algorithms.graphics.window,
+                                    cv::Point(
+                                        algorithms.graphics.boxes[result].topLeft.x,
+                                        algorithms.graphics.boxes[result].topLeft.y
+                                    ),
+                                    cv::Point(
+                                        algorithms.graphics.boxes[result].bottomRight.x,
+                                        algorithms.graphics.boxes[result].bottomRight.y
+                                    ),
+                                    cv::Scalar(0, 255, 0),
+                                    4,
+                                    cv::LINE_4
+                                );
+                                cv::imshow(WINDOW_NAME, algorithms.graphics.window);
+                                std::cout << INFO "Time Elapsed: " << duration << " Nano Seconds" << std::endl;
+                                cv::waitKey(0);
+                                algorithms.graphics.mouseStatus = EVENTS_ACTIVE;
+                                break;
+                            }
+                            default:
+                                break;
+                        }
+                    }
                     break;
                 }
                 case 0: {

@@ -14,6 +14,10 @@
     # ifndef ALGORITHMS_OMID_SOJOODI_SORTS
         # include "Sorts/Sorts.hpp"
     # endif // ALGORITHMS_OMID_SOJOODI_SORTS
+    //-- Include Search Module
+    # ifndef ALGORITHMS_OMID_SOJOODI_SEARCH
+        # include "Search/Search.hpp"
+    # endif // ALGORITHMS_OMID_SOJOODI_SEARCH
     //-- Include Needed Libraries
     # include <iostream>
     # include <random>
@@ -40,7 +44,14 @@
                 int min,
                 int max
             );
+            //-- Generate Chess Board
+            void generateChessBoard(
+                int size,
+                bool colorful
+            );
             //-- Sorts
             Sorts sorts;
+            //-- Search
+            Search search;
     };
 # endif // ALGORITHMS_OMID_SOJOODI

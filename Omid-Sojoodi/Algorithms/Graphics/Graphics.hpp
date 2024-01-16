@@ -15,6 +15,9 @@
     # define WINDOW_WIDTH 1200
     # define WINDOW_HEIGHT 1200
     # define WINDOW_NAME "Graphical View"
+    # define INFO_WINDOW_WIDTH 300
+    # define INFO_WINDOW_HEIGHT 300
+    # define INFO_WINDOW_NAME "Info"
     extern cv::Scalar WINDOW_BACKGROUND;
     //-- Include Needed Libraries
     # include <iostream>
@@ -25,6 +28,11 @@
     # define SUCCESS "\033[38;2;0;255;0m[SUCCESS]\033[0m "
     # define WARNING "\033[38;2;255;255;0m[WARNING]\033[0m "
     # define RESET "\033[0m"
+    //-- Mouse Events Status
+    enum MouseEvents {
+        EVENTS_INACTIVE,
+        EVENTS_ACTIVE
+    };
     //-- Points Class Definition
     class Point {
         public:
@@ -34,18 +42,45 @@
             //-- Constructor
             Point();
     };
+    //-- Box Class Definition
+    class Box {
+        public:
+            int width;
+            int height;
+            cv::Point center;
+            cv::Scalar color;
+            cv::Point topLeft;
+            cv::Point bottomRight;
+            //-- Constructor
+            Box();
+    };
     //-- Graphics Class Definition
     class Graphics {
         public:
+            //-- Mouse Status
+            int mouseStatus;
+            //-- Selected Box ID
+            int selectedBoxID = -1;
+            int selected = -1;
             //-- Main Window
-            cv::Mat window, tmpMat;
+            cv::Mat window, tmpMat, infoWindow;
+            //-- Main Window Position
+            cv::Point windowPositionCenter;
             //-- Points
             std::vector<Point> points;
+            //-- Boxes
+            std::vector<Box> boxes;
             //-- Constructor
             Graphics();
             //-- Start Animation
             void startAnimation();
             //-- Method to Show Generated Points
             void showPoints();
+            //-- Method to Show Generated Boxes
+            void showBoxes();
+            //-- Mouse Callback
+            static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
+            //-- Mouse Events
+            void onMouse(int event, int x, int y, int flags);
     };
 # endif // ALGORITHMS_OMID_SOJOODI_GRAPHICS

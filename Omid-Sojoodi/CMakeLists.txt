@@ -65,6 +65,10 @@ add_library(Algorithms
     # Algorithms/Sorts/Circle/Circle.cpp
     # Algorithms/Sorts/Cocktail/Cocktail.hpp
     # Algorithms/Sorts/Cocktail/Cocktail.cpp
+    Algorithms/Search/Search.hpp
+    Algorithms/Search/Search.cpp
+    Algorithms/Search/Binary/BinarySearch.hpp
+    Algorithms/Search/Binary/BinarySearch.cpp
 )
 
 # Link libraries to the main executable
