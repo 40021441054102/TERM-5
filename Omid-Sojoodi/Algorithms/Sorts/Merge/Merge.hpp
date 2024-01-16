@@ -39,6 +39,9 @@
         private:
             sortedPoints4 sorted;
             cv::Mat window;
+            std::vector<double> tmpTheta;
+            std::vector<int> tmpX;
+            std::vector<int> tmpY;
         public:
             //-- Constructor
             Merge();
@@ -48,7 +51,7 @@
             sortedPoints4 getSorted(bool graphical);
             //-- Merge
             void merge(
-                std::vector<sortedPoints4> &points,
+                sortedPoints4 &points,
                 int left,
                 int middle,
                 int right,
@@ -56,7 +59,7 @@
             );
             //-- Merge Sort
             void mergeSort(
-                std::vector<sortedPoints4> &points,
+                sortedPoints4 &points,
                 int left,
                 int right,
                 bool graphical

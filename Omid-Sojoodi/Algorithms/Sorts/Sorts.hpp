@@ -23,12 +23,14 @@
     # ifndef ALGORITHMS_MERGE_SORT
         # include "Merge/Merge.hpp"
     # endif // ALGORITHMS_MERGE_SORT
-    //-- Insertion Sort
-    //-- Selection Sort
-    //-- Merge Sort
     //-- Quick Sort
+    # ifndef ALGORITHMS_QUICK_SORT
+        # include "Quick/Quick.hpp"
+    # endif // ALGORITHMS_QUICK_SORT
     //-- Heap Sort
-    //-- Radix Sort
+    # ifndef ALGORITHMS_HEAP_SORT
+        # include "Heap/Heap.hpp"
+    # endif // ALGORITHMS_HEAP_SORT
     //-- Include Needed Libraries
     # include <iostream>
     //-- Define Log Messages
@@ -51,5 +53,9 @@
             Selection selection;
             //-- Merge Sort
             Merge merge;
+            //-- Quick Sort
+            Quick quick;
+            //-- Heap Sort
+            Heap heap;
     };
 # endif // ALGORITHMS_OMID_SOJOODI_SORTS

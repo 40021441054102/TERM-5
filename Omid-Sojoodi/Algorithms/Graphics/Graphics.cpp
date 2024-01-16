@@ -124,8 +124,8 @@
                 cv::LINE_4,
                 0
             );
-            cv::imshow(WINDOW_NAME, window);
-            cv::waitKey(1);
+            // cv::imshow(WINDOW_NAME, window);
+            // cv::waitKey(1);
         }
         cv::imshow(WINDOW_NAME, window);
     }

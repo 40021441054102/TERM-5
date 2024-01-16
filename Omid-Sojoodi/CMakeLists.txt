@@ -21,6 +21,50 @@ add_library(Algorithms
     Algorithms/Sorts/Selection/Selection.cpp
     Algorithms/Sorts/Merge/Merge.hpp
     Algorithms/Sorts/Merge/Merge.cpp
+    Algorithms/Sorts/Quick/Quick.hpp
+    Algorithms/Sorts/Quick/Quick.cpp
+    Algorithms/Sorts/Heap/Heap.hpp
+    Algorithms/Sorts/Heap/Heap.cpp
+    # Algorithms/Sorts/Radix/Radix.hpp
+    # Algorithms/Sorts/Radix/Radix.cpp
+    # Algorithms/Sorts/Shell/Shell.hpp
+    # Algorithms/Sorts/Shell/Shell.cpp
+    # Algorithms/Sorts/Counting/Counting.hpp
+    # Algorithms/Sorts/Counting/Counting.cpp
+    # Algorithms/Sorts/Bucket/Bucket.hpp
+    # Algorithms/Sorts/Bucket/Bucket.cpp
+    # Algorithms/Sorts/Comb/Comb.hpp
+    # Algorithms/Sorts/Comb/Comb.cpp
+    # Algorithms/Sorts/Cycle/Cycle.hpp
+    # Algorithms/Sorts/Cycle/Cycle.cpp
+    # Algorithms/Sorts/Flash/Flash.hpp
+    # Algorithms/Sorts/Flash/Flash.cpp
+    # Algorithms/Sorts/Gnome/Gnome.hpp
+    # Algorithms/Sorts/Gnome/Gnome.cpp
+    # Algorithms/Sorts/Intro/Intro.hpp
+    # Algorithms/Sorts/Intro/Intro.cpp
+    # Algorithms/Sorts/OddEven/OddEven.hpp
+    # Algorithms/Sorts/OddEven/OddEven.cpp
+    # Algorithms/Sorts/Pancake/Pancake.hpp
+    # Algorithms/Sorts/Pancake/Pancake.cpp
+    # Algorithms/Sorts/Pigeonhole/Pigeonhole.hpp
+    # Algorithms/Sorts/Pigeonhole/Pigeonhole.cpp
+    # Algorithms/Sorts/SelectionRecursive/SelectionRecursive.hpp
+    # Algorithms/Sorts/SelectionRecursive/SelectionRecursive.cpp
+    # Algorithms/Sorts/Stooge/Stooge.hpp
+    # Algorithms/Sorts/Stooge/Stooge.cpp
+    # Algorithms/Sorts/Strand/Strand.hpp
+    # Algorithms/Sorts/Strand/Strand.cpp
+    # Algorithms/Sorts/Tree/Tree.hpp
+    # Algorithms/Sorts/Tree/Tree.cpp
+    # Algorithms/Sorts/Bitonic/Bitonic.hpp
+    # Algorithms/Sorts/Bitonic/Bitonic.cpp
+    # Algorithms/Sorts/Bozo/Bozo.hpp
+    # Algorithms/Sorts/Bozo/Bozo.cpp
+    # Algorithms/Sorts/Circle/Circle.hpp
+    # Algorithms/Sorts/Circle/Circle.cpp
+    # Algorithms/Sorts/Cocktail/Cocktail.hpp
+    # Algorithms/Sorts/Cocktail/Cocktail.cpp
 )
 
 # Link libraries to the main executable
