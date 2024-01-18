@@ -15,8 +15,8 @@
     # define WINDOW_WIDTH 1200
     # define WINDOW_HEIGHT 1200
     # define WINDOW_NAME "Graphical View"
-    # define INFO_WINDOW_WIDTH 300
-    # define INFO_WINDOW_HEIGHT 300
+    # define INFO_WINDOW_WIDTH WINDOW_WIDTH / 4
+    # define INFO_WINDOW_HEIGHT WINDOW_HEIGHT / 4
     # define INFO_WINDOW_NAME "Info"
     extern cv::Scalar WINDOW_BACKGROUND;
     //-- Include Needed Libraries
@@ -47,6 +47,7 @@
         public:
             int width;
             int height;
+            double weight;
             cv::Point center;
             cv::Scalar color;
             cv::Point topLeft;

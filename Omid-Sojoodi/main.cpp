@@ -18,6 +18,7 @@
         int choice = -1;
         Algorithms algorithms;
         algorithms.graphics.window.copyTo(mainWindow);
+        system("sleep 0.2");
         while(true) {
             if (choice == 0) {
                 cv::destroyAllWindows();
@@ -27,6 +28,7 @@
             std::cout << CYAN "Available Algorithms:" RESET << std::endl;
             std::cout << CYAN "1." CYAN2 " Sorts" RESET << std::endl;
             std::cout << CYAN "2." CYAN2 " Binary Search" RESET << std::endl;
+            std::cout << CYAN "3." CYAN2 " Moving on Grid" RESET << std::endl;
             // std::cout << CYAN "2." CYAN2 " TSP" RESET << std::endl;
             // std::cout << CYAN "3." CYAN2 " 8 Queens" RESET << std::endl;
             // std::cout << CYAN "4." CYAN2 " Min Max" RESET << std::endl;
@@ -607,6 +609,19 @@
                                 break;
                         }
                     }
+                    break;
+                }
+                case 3: {
+                    mainWindow.copyTo(algorithms.graphics.window);
+                    std::cout << "\033[2J\x1b[H" << std::endl;
+                    std::cout << YELLOW "Moving on Grid Algorithm on Real Topological Map" << std::endl;
+                    std::cout << LOG "Please Crop Specific Part of the Map" << std::endl;
+                    algorithms.generateMapData(
+                        100,
+                        GRAPHICS_FOR_MAPS,
+                        INPUT_FILE
+                    );
+                    algorithms.movingOnGrid.run(algorithms.graphics.window);
                     break;
                 }
                 case 0: {

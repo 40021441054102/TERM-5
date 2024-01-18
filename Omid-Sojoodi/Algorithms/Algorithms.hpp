@@ -18,6 +18,22 @@
     # ifndef ALGORITHMS_OMID_SOJOODI_SEARCH
         # include "Search/Search.hpp"
     # endif // ALGORITHMS_OMID_SOJOODI_SEARCH
+    //-- Include Moving on Grid Module
+    # ifndef ALGORITHMS_OMID_SOJOODI_MOVING_ON_GRID
+        # include "Moving-on-Grid/MovingOnGrid.hpp"
+    # endif // ALGORITHMS_OMID_SOJOODI_MOVING_ON_GRID
+    //-- Algorithms Graphical View Enum
+    enum AlgorithmsEnum {
+        GRAPHICS_FOR_SEARCHS,
+        GRAPHICS_FOR_CHESS,
+        GRAPHICS_FOR_SORTS,
+        GRAPHICS_FOR_MAPS
+    };
+    //-- Data Generation Methods Enum
+    enum DataGenerationMethodsEnum {
+        RANDOM_DATA,
+        INPUT_FILE,
+    };
     //-- Include Needed Libraries
     # include <iostream>
     # include <random>
@@ -47,11 +63,29 @@
             //-- Generate Chess Board
             void generateChessBoard(
                 int size,
-                bool colorful
+                int graphic_mode
             );
+            //-- Generate Map Data
+            void generateMapData(
+                int size,
+                int graphic_mode,
+                int data_generation_method
+            );
+            //-- Mouse Callback
+            static void onMouseCallback(int event, int x, int y, int flags, void* userdata);
+            //-- Mouse Events
+            void onMouse(int event, int x, int y, int flags);
             //-- Sorts
             Sorts sorts;
             //-- Search
             Search search;
+            //-- Moving on Grid
+            MovingOnGrid movingOnGrid;
+            bool start_selected;
+            bool end_selected;
+            cv::Point p1, p2, start, end;
+            bool p1_selected;
+            bool p2_selected;
+            bool ready;
     };
 # endif // ALGORITHMS_OMID_SOJOODI

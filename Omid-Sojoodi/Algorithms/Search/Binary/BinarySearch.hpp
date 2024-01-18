@@ -26,18 +26,18 @@
     # define WINDOW_NAME "Graphical View"
     //-- Box Structure
     struct box {
-        cv::Point topLeft;
         cv::Point bottomRight;
+        cv::Point topLeft;
     };
     //-- Binary Search Class Definition
     class BinarySearch {
         private:
-            //-- Target
-            int target;
             //-- Array
             std::vector<int> data;
             //-- Window
             cv::Mat window;
+            //-- Target
+            int target;
         public:
             //-- Boxes
             std::vector<box> boxes;

@@ -7,10 +7,12 @@ add_executable(main main.cpp)
 
 # Add source files in Sorts directory
 add_library(Algorithms
+    # - Main Modules
     Algorithms/Graphics/Graphics.hpp
     Algorithms/Graphics/Graphics.cpp
     Algorithms/Algorithms.hpp
     Algorithms/Algorithms.cpp
+    # - Sort Algorithms
     Algorithms/Sorts/Sorts.hpp
     Algorithms/Sorts/Sorts.cpp
     Algorithms/Sorts/Bubble/Bubble.hpp
@@ -65,10 +67,14 @@ add_library(Algorithms
     # Algorithms/Sorts/Circle/Circle.cpp
     # Algorithms/Sorts/Cocktail/Cocktail.hpp
     # Algorithms/Sorts/Cocktail/Cocktail.cpp
+    # - Search Algorithms
     Algorithms/Search/Search.hpp
     Algorithms/Search/Search.cpp
     Algorithms/Search/Binary/BinarySearch.hpp
     Algorithms/Search/Binary/BinarySearch.cpp
+    # - Moving on Grid Algorithm
+    Algorithms/Moving-on-Grid/MovingOnGrid.hpp
+    Algorithms/Moving-on-Grid/MovingOnGrid.cpp
 )
 
 # Link libraries to the main executable
