@@ -42,7 +42,7 @@ module test_mux4x1_8bit();
     wire [7:0] f;
     mux4x1_8bit test(.i0(i0), .i1(i1), .i2(i2), .i3(i3), .sel0(sel0), .sel1(sel1), .f(f));
     initial begin
-        $monitor("i0=%b, i1=%b, i2=%b, i3=%b, sel0=%b, sel1=%b | f=%b", i0, i1, i2, i3, sel0, sel1, f);
+        $monitor("\033[0;36mi0 = %b, i1 = %b, i2 = %b, i3 = %b \033[0m| sel0 = %b, sel1 = %b | f = %b", i0, i1, i2, i3, sel0, sel1, f);
         sel0 = 1'b0;
         sel1 = 1'b0;
         i0 = 8'b01101100;
