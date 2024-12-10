@@ -24,7 +24,7 @@
     # define LOG "\033[38;2;150;150;150m[LOG]\033[0m "
     # define INFO "\033[38;2;0;150;150m[INFO]\033[0m "
     # define MOVE "\033[38;2;150;150;0m[MOVE]\033[0m "
-    # define PATH "Assets/"
+    # define PATH "../Assets/"
     # define TAB "   "
     # define ENDL "\n"
     # define SPEED 2
